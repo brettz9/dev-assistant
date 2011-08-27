@@ -1,0 +1,1493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+Distributed under GNU Public License!
+For details see: http://www.gnu.org/licenses/gpl.html
+
+Please keep these credits:
+Author : Cüneyt Yilmaz
+Contact: please open the page for email info
+
+I assume no responsibility for ANYTHING that you may cause via the use of this program!
+
+-->
+<!--
+TODO:
+ - change replacement code from str.replace to str.exec->str.replace
+ - update replacement counts
+ - add tooltips to replaced blocks
+ - implement a tabbed-view like in:
+   http://javascript.internet.com/css/tab-view.html
+   http://onlinetools.org/tools/domtabdata/
+   http://jon.hedley.net/html-tabbed-dialog-widget
+-->
+<html>
+
+<head>
+<!------------------------------------------------------------------------------------------------->
+<title>JRX: real-time JavaScript RegExp evaluator - cuneytyilmaz.com</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-9">
+<meta name="author" content="Cuneyt Yilmaz, C&uuml;neyt Y&#305;lmaz, cuneytyilmaz.com>">
+<meta name="keywords" content="jrx, javascript, regexp, regex, regular expressions, cuneyt, yilmaz, real time, real-time, on the fly, on-the-fly, rx, activestate, komodo, evaluate, evaluator">
+<meta name="description" content="This is a simple JavaScript real-time regular expression evaluator, similar to RX tool of Activestate's Komodo IDE">
+<meta name="version" content="1.1b16">
+
+<style type="text/css">
+<!--
+
+
+
+body {
+    font-family: Verdana, Helvetica, sans-serif; font-size: 0.9em;
+    color: #172F60; background-color: #fff;
+    margin: 5px; padding: 0 0 3em 0;
+    }
+h1 {
+    font-size: 1.5em; font-family : Garamond, Times, serif;
+    color: #25968A; background-color: transparent;
+    display: inline; margin-right: 5em;
+    }
+input, textarea {
+    color: inherit; background-color: inherit;
+    font-family: "Courier New", Courier, sans-serif;
+    }
+
+/* link colors */
+a:link, a:visited, a:hover, a:active { text-decoration: underline; }
+a:visited { color: #AE2A56; border-bottom: 1px solid #2F5FC1; }
+a:link    { color: #2F5FC1; border-bottom: 1px solid #2F5FC1; }
+a:hover   { color: #F3F5F8; border-bottom: 1px solid #172F60; background-color: #B7BCC7; }
+html>body a:link, html>body a:visited { border-bottom: 1px dotted #2F5FC1; text-decoration: none; }
+html>body a:hover, html>body a:active { border-bottom: 1px solid; }
+
+#help_about {
+    display: none;
+    font-family: Verdana, Helvetica, sans-serif;
+    width: 41em;
+    margin: 0.5em auto 0 0;
+    padding: 0.5em 1em 1em 1em;
+    border: 1px solid #DFE4EC;
+    }
+#help_about p, #help_about table, #help_about td, #help_about ul {font-size: 0.9em;}
+#help_about p.q       { color: #2F5FC1; font-weight: bold; }
+#help_about p.a       { font-style: italic; }
+#help_about p.w       { color: red; font-weight: bold; }
+
+
+
+
+
+#pageheader, #pagenews, #fs_regexp, #fs_results, #fs_target {
+    width: 41em;
+    }
+
+#pagenews { color: #cc0000; }
+
+#fs_regexp, #fs_results, #fs_target {
+    display: block;
+    border: 1px solid #DFE4EC;
+    margin: 0.5em auto 0 0;
+    padding: 0.5em 1em 1em 1em;
+    background-color: #F3F5F8;
+}
+
+/* for the field labels */
+#l_regexp, #l_results, #l_target {
+    font-weight: bold; font-size: 0.8em;
+    margin: 0 0 0.4em 0;
+    padding: 0.4em;
+    border: 1px solid #DFE4EC;
+    border-width: 1px 1px 0 1px;
+    /*color: #F3F5F8;*/
+    background-color: #F3F5F8;
+    }
+
+
+
+
+/* for the modifiers & options */
+#block_opt, #target_opt
+    { font: normal normal 0.7em/0.8 Verdana, Helvetica, sans-serif; }
+#i_compact, #i_global, #i_singleline, #i_multiline, #i_insensitive, #i_extended, #i_split, #i_replace, #i_miniref, #i_evaltarget, #i_escaperesults
+    { width: 12px; height: 12px; margin-bottom: 0px; }
+label abbr{ border-bottom: 1px dotted; }
+
+/* input[type="checkbox"] { width: 1.1em; height: 1.1em; } */
+
+
+/** Bright Focus (for buttons, links, and textboxes) */
+    a:hover:active { color: black; background: yellow; }
+    a:not(:hover):active { color: black; background: #eee; }
+    *:focus { -moz-outline: 2px solid -moz-rgba(255,0,0,0.5) !important; -moz-outline-offset: 1px !important; -moz-outline-radius: 3px !important; }
+    textarea:focus, select:focus, input:focus { -moz-outline-offset: -1px !important; }
+    a:focus { -moz-outline-offset: 0px !important; }
+
+
+/* for the main elements */
+#i_sample { font: normal normal 1em/0.8 Verdana, Helvetica, sans-serif; }
+
+
+#i_regexp, #i_replacements, #o_result_matched, #o_result_replaced, #i_target, #o_target  {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 0.75em;
+    /* UAs don't allow this to be overridden!?! border: 1px solid #A6BCE8 !important; */
+    border: 1px solid #DFE4EC;
+    color: inherit; background-color: #fff;
+    overflow: auto;
+    width: 100%;
+    }
+#i_regexp:focus, #i_replacements:focus, #i_target:focus {
+    background-color: #FFF1D4;
+    }
+
+#i_regexp.full { width: 100%; float: none; height: 1.5em; }
+#i_regexp.half { width: 50%;  float: left; height: 1.5em; }
+
+#i_replacements.hidden { display: none; height: 1.5em; }
+#i_replacements.shared { display: block; height: 1.5em; width: 50%; float: right; }
+
+#o_result_matched { list-style: none; color: inherit; background-color: #fff; font-size: 0.75em; border: 1px solid #DFE4EC; width: 100%; height: 14.66em; overflow: auto; margin: 0; padding: 0; }
+#o_result_matched.shown { display: block; }
+#o_result_matched.hidden { display: none; }
+#o_result_matched li { font-family: "Courier New", Courier, sans-serif; white-space: pre; background-color: inherit; border-bottom: 1px solid #fff; padding: 0; }
+#o_result_matched li:hover { background-color: #ccc; border-bottom: 1px dotted blue; cursor: pointer; }
+
+#o_result_replaced.shown  { display: block; padding: 0; width: auto; height: 14.66em; /* (select-size=11) / 0.75 = 14.66em */ white-space: pre; }
+#o_result_replaced.hidden { display: none; }
+
+
+#o_target em, #o_result_replaced em { color: #FFF1D4; background-color: #172F60; border-bottom: 1px dotted #172F60; font-style: normal; font-weight: bold; padding: 0 0.1em 0 0.1em; margin: 0; }
+
+
+#o_target_block { height: 9em; width: 41em; }
+#i_target.shown { display: block; height: 100%; width: 100%; padding: 0; margin: 0; border: 1px solid #DFE4EC; }
+#i_target.hidden { display: none; }
+#o_target.shown { display: block; height: 100%; width: 100%; padding: 0; margin: 0; border: 1px solid #DFE4EC; white-space: pre; }
+#o_target.hidden { display: none; }
+
+
+
+#o_num_results, #o_target_len
+    { width: 5em; /* display: block; float: left; border: 1px solid #AE2A56; color: #AE2A56; background-color: #fff; */ font-weight: bold; text-align: right;  }
+
+#result_tooltip {
+    position: absolute; visibility:hidden; white-space: normal; overflow: hidden;
+    width: 50em; padding: 1em;
+    font-size: 0.7em;
+    color: #172F60; background-color: #FFF1D4; border: 3px double #DFE4EC;
+    }
+
+
+/* general purpose */
+.notes { text-align: justify;}
+.noStyles { display: none; }
+#inlinehelp { position: absolute; left: 45em; top: 1em; width: auto; border: 1px solid #DFE4EC; visibility: hidden; }
+#inlinehelp pre { font-size: 0.9em; }
+#help {
+    text-decoration: none;
+    font-weight: bold;
+    cursor: help !important;
+    margin: 0 auto auto 7em;
+    float: right;
+    }
+
+-->
+</style>
+
+<!------------------------------------------------------------------------------------------------->
+
+<script type="text/javascript">
+<!--
+// window.onError = _jrxErrorHandler;
+// function _jrxErrorHandler (desc, url, line, char) { return; alert("Caught an unhandled exception\ndesc: (" + desc + ")\nurl: (" + url + ")\nline: (" + line + ")\nchar: (" + char + ")"); return true; }
+function el(id) { return document.getElementById(id); }
+function arraycontent(arr) { var outstr=''; for(var x in arr) outstr=outstr+x+": "+arr[x]+"\n"; return outstr; }
+
+var is_gecko = navigator.userAgent.toLowerCase().indexOf('gecko') != -1 ? true : false;
+if(!is_gecko)
+{
+    alert("Due to lack of time, I've dropped IE-support almost completely, so the page may look skewed or not work correctly, Opera-support may come back though; see About for more details!\n\n"
+    + "You'll be redirected to the last working IE/Opera version now.");
+    document.location = "jrx.nongecko.html";
+}
+
+
+
+
+var JRX =
+{
+    O_RESULT_WIDTH: 81,
+    // TODO: DELETE: are these 2 still needed?
+    // I_REGEXP_WIDTH: 80;
+    // I_TARGET_WIDTH: 80;
+    // this hard-limit helps that regexps don't run infinitely, e.g. due to backtracking
+    MAX_ITERATIONS: 250,
+
+    // TODO: deleteme: is this needed?
+    // this string keeps the old content of the target text
+    // it's compared against the current content to see if it's changed
+    _old_target     : '',
+
+    _regexp         : '',
+    _replacement    : '',
+    _matches        : new Array(),
+    _splits         : new Array(),
+    _target         : '',
+    _oldoptions     : new Array(),
+    _oldregexp      : '',
+    _oldreplacement : '',
+    _oldtarget      : '',
+
+    _samples: {
+        dummy: {},
+        u0: {desc: 'user expr'      , options: '',      expr: '', target: '', replacement: '', callback: ''},
+        di: {desc: '/i demo'        , options: 'i',     expr: 'foo bar.+', target: "Foo bar bla\nfoo Bar blub\nfoo bar - this line will be matched only if the regexp is case-insensitive\nFoo Bar dummy", replace: '', callback: ''},
+        dg: {desc: '/g demo'        , options: 'g',     expr: 'foo bar.+', target: "foo bar 1\nfoo bar this won't be matched without /g, matching stops after the first match\nfoo bar, this neither", replacement: '', callback: ''},
+        ds: {desc: '/s demo'        , options: 's',     expr: 'foo.+bar', target: "foo\nbar\nwithout /s . will match anything BUT newline (\\n)", replacement: '', callback: ''},
+        dm: {desc: '/m demo'        , options: 'm',     expr: '^foo.+', target: "this line will NOT be matched anyway\nfoo bar - this is the line that will be matched\nfoo bar - this line will NOT be matched either\n\nnormally without /m \"^\" & \"$\" would match only once\nthe very beginning and end of the text, and not recognize any line in between", replacement: '', callback: ''},
+        dx: {desc: '/x demo'        , options: 'x',     expr: "#this is a comment\n#all inline whitespace is ignored in /x mode (Hello World below won't be matched)\n#use \\s or such to match whitespace\n(foo\\sbar|Hello World) # this is also a comment", target: "foo bar\nHello World", replacement: '', callback: ''},
+        dp: {desc: 'split demo'     , options: 'p',     expr: ',', target: 'a typical,comma separated,entry,from a so-called CSV (comma-separated value) file', replacement: '', callback: ''},
+        dr: {desc: 'replace demo'   , options: 'r',     expr: '(\\w{4,})\\s(\\w+)', target: 'foo bar hello world', replacement: '($2 .. $& -- $1)', callback: ''},
+        de: {desc: 'evaldemo'       , options: 'e',     expr: '(\\S+)(\\s+)(\\S+)', target: 'foo\\tbar', replacement: '', callback: ''},
+        xr: {desc: 'XRegExp named match', options: 'rx',expr: "(?<month>\\d{2}) # put this into \"month\"\n([\\.\\/])\n(?<day>\\d{2})   # then into \"day\"\n\\2              # use the same\n                # separator as above\n(?<year>\\d{4})  # finally into \"year\"\n# and convert a \"US\" date\n# to a \"European\" date", target: '12/31/1999', replacement: '${day}.${month}.${year}', callback: ''},
+        s0: {desc: 'simple mail'    , options: 'gmx',   expr: "^\n[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*                                 # the username part\n@[a-zA-Z0-9-]+                                                            # hostname\n(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))   #TLD\n$", target: "example@example.com\nfoo@bar.info\nblah@127.0.0.1\nbroken@@example.com\nfoo@bar.infp\nblah@.nospam.biz\ntaken from http://regexlib.com/", replacement: '', callback: ''},
+        s1: {desc: 'simple url'     , options: 'gix',   expr: "(\n (\n  (file|gopher|news|nntp|telnet|http|ftp|https|tps|sftp)\n  ://\n )\n |\n (www.)\n)+\n(\n ([a-zA-Z0-9._-]+.[a-zA-Z]{2,6})\n |\n ([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})\n)\n(/[a-zA-Z0-9&amp;%_./-~-]*)?", target: "http://diskusneforum.sk\nwww.diskusneforum.sk\nftp://123.123.123.123/\ndiskusneforum.sk\ntaken from http://regexlib.com/", replacement: '', callback: ''},
+        cl: {desc: 'clear everything',options: 'clear', expr: '', target: '', replacement: '', callback: ''}
+    },
+
+
+    getRegExp: function()           { return this._regexp },
+    setRegExp: function(text)       { this._oldregexp = this._regexp; this._regexp = text; el('i_regexp').value = this._regexp; },
+    restoreRegExp: function()       { this._regexp = this._oldregexp; },
+    focusRegExp: function()         { el('i_regexp').focus() },
+
+    getReplacement: function()      { return this._replacement },
+    setReplacement: function(text)  { this._oldreplacement = this._replacement; this._replacement = text; el('i_replace').value = this._replacement; },
+    restoreReplacement: function()  { this._replacement = this._oldreplacement; },
+
+    getTarget: function()           { return this._target },
+    setTarget: function(text)       { this._oldtarget = this._target; this._target = text; el('i_target').value = this.target; },
+    restoreTarget: function()       { this._target = this._oldtarget; },
+
+    getOptGlobal: function()            { return el('i_global').checked ? 1 : 0 },
+    setOptGlobal: function(bool)        { el('i_global').checked = bool ? 'checked' : '' },
+
+    getOptMulti: function()             { return el('i_multiline').checked ? 1 : 0 },
+    setOptMulti: function(bool)         { el('i_multiline').checked = bool ? 'checked' : '' },
+
+    getOptSingle: function()            { return el('i_singleline').checked ? 1 : 0  },
+    setOptSingle: function(bool)        { el('i_singleline').checked = bool ? 'checked' : '' },
+
+    getOptInsensitive: function()       { return el('i_insensitive').checked ? 1 : 0 },
+    setOptInsensitive: function(bool)   { el('i_insensitive').checked = bool ? 'checked' : '' },
+
+    getOptExtended: function()          { return el('i_extended').checked ? 1 : 0 },
+    setOptExtended: function(bool)      { el('i_extended').checked = bool ? 'checked' : '' },
+
+    getOptSplit: function()             { return el('i_split').checked ? 1 : 0 },
+    setOptSplit: function(bool)         { el('i_split').checked = bool ? 'checked' : ''; el('i_replace').checked = '' ; if(el('i_split')) JRX.toggleOutput(); },
+
+    getOptReplace: function()           { return el('i_replace').checked ? 1 : 0 },
+    setOptReplace: function(bool)       { el('i_replace').checked = bool ? 'checked' : ''; el('i_split').checked = ''; if(el('i_replace')) JRX.toggleOutput(); },
+
+    getOptCompact: function()           { return el('i_compact').checked ? 1 : 0 },
+    setOptCompact: function(bool)       { el('i_compact').checked = bool ? 'checked' : '' },
+
+    getOptHelp: function()              { return el('i_miniref').checked ? 1 : 0 },
+    setOptHelp: function(bool)          { el('i_miniref').checked = bool ? 'checked' : ''},
+
+    getOptEval: function()              { return el('i_evaltarget').checked ? 1 : 0 },
+    setOptEval: function(bool)          { el('i_evaltarget').checked = bool ? 'checked' : ''},
+
+
+
+
+    updateTarget: function()
+    {
+        if(this._old_target != el('i_target').value)
+        {
+            this._target = el('i_target').value;
+            el('o_target_len').innerHTML = this._target.length;
+        }
+    },
+
+
+    toggleOutput: function()
+    {
+        if(el('i_replace').checked)
+        {
+            el('i_regexp').className = 'half';
+            el('i_replacements').className = 'shared';
+            el('o_result_replaced').className = 'shown';
+            el('o_result_matched').className = 'hidden';
+        }
+        else
+        {
+            el('i_regexp').className = 'full';
+            el('i_replacements').className = 'hidden';
+            el('o_result_replaced').className = 'hidden';
+            el('o_result_matched').className = 'shown';
+        }
+    },
+
+    toggleMiniRef: function()
+    {
+        el('inlinehelp').style.visibility = el('i_miniref').checked ? 'visible' : 'hidden';
+    },
+
+    toggleVerbose: function()
+    {
+        el('pageheader').style.display = el('i_compact').checked ? 'none' : 'block';
+        el('pagefooter').style.display = el('i_compact').checked ? 'none' : 'block';
+        el('pagenews').style.display   = el('i_compact').checked ? 'none' : 'block';
+    },
+
+    toggleHelpAbout: function()
+    {
+        el('help_about').style.display = el('help_about').style.display == 'block' ? 'none' : 'block';
+    },
+
+    toggleTarget: function(show)
+    {
+        el('i_target').className = show ? 'shown' : 'hidden';
+        el('o_target').className = show ? 'hidden': 'shown';
+    },
+
+
+    toggleTooltip: function(showtip, element, substrs)
+    {
+        if(el('i_split').checked || el('i_replace').checked)
+            return true;
+
+        if(!showtip)
+        {
+            el('result_tooltip').style.visibility = 'hidden';
+        }
+        else
+        {
+            if(substrs)
+            {
+                el('result_tooltip').innerHTML = 'Matched group (total ' + substrs[0].length + ' char' + (substrs[0].length ? 's' : '') +')<br/>'
+                    +'Click to highlight, double-click to jump to that pos<br/><br/>';
+                for(var i=0; i<substrs.length; i++)
+                {
+                    if(!substrs[i])
+                        substrs[i] = '[not matched]';
+                    el('result_tooltip').innerHTML += '<b>$' + i + ':</b>&gt;' + Util.unHTMLize(substrs[i]).replace(/\n/g, '\\n') + '&lt;<br/>';
+                }
+            }
+            // alert("el(element).id: " + el(element).id + "\nel(element).offsetLeft: " + el(element).offsetLeft + "\nel(element).parentNode.scrollLeft: " + el(element).parentNode.scrollLeft + "\nel(element).offsetWidth: " + el(element).offsetWidth + "\n" + "el(element).id: " + el(element).id + "\nel(element).offsetTop: " + el(element).offsetTop + "\nel(element).parentNode.scrollTop: " + el(element).parentNode.scrollTop + "\nel(element).offsetHeight: " + el(element).offsetHeight);
+            el('result_tooltip').style.left = el(element).offsetLeft - el(element).parentNode.scrollLeft + 0.5 * el(element).offsetHeight;
+            el('result_tooltip').style.top  = el(element).offsetTop - el(element).parentNode.scrollTop + 1.5 * el(element).offsetHeight;
+            el('result_tooltip').style.visibility = 'visible';
+        }
+    },
+
+
+    selectTargetPortion: function(start, end, target)
+    {
+        if(!target)
+            target = el('i_target');
+        try {
+            //if(target.setSelectionRange)
+                //alert("yes: " + is_gecko);
+        }catch(e){
+            throw(e);
+        }
+
+        if(is_gecko)
+        {
+            target.setSelectionRange(start, end);
+        }
+        else
+        {
+            // supposed IE solution; this is not tested!
+            var oRange = target.createTextRange();
+            oRange.moveStart("character", start);
+            oRange.moveEnd  ("character", end);
+            oRange.select();
+        }
+    },
+
+    highlightText: function(start, end, target)
+    {
+        if(!target)
+            target = el('i_target');
+        /* this doesn't work with textarea's
+        var range = document.createRange();
+        range.setStart(el('i_target'), start);
+        range.setEnd(el('i_target'), end);
+        range.scrollIntoView(false);
+        */
+
+        this.toggleTarget(false);
+        // original target content
+        var tc = target.value;
+        // highlighted text
+        var th = tc.substr(start, end-start).replace(/\n/g, '\\n\n');
+        // htmlized target text
+        var tc_html = Util.unHTMLize(tc.substr(0, start)) +  '<em id="highlighted_text">' + Util.unHTMLize(th) + '</em>' + Util.unHTMLize(tc.substr(end));
+        el('o_target').innerHTML = tc_html;
+        // el('o_target').innerHTML = tc_html.replace(/\n/g, "<br/>\n");
+        el('highlighted_text').scrollIntoView(false);
+    },
+
+
+    updateResults: function()
+    {
+        var results_arr     = new Array;
+        var num_results     = -1;    // -1: if invalid regexp, 0: nothing matched, >0: matches found
+        var targetstr       = el('i_target').value;
+        var regexpstr       = el('i_regexp').value;
+        var regexp_is_valid = false;
+        var item_id_prefix  = '_outitem';
+        var item_prefix, item_suffix;
+        var current_match;
+
+        // this array keeps the matched strings' positions and lengths in the target text
+        var textindex_arr       = new Array();
+        // this array keeps the matched substrings ($1, $2, etc.) for each match
+        var substr_arr          = new Array();
+        var myRe;
+
+        // clear old results
+        el('o_result_replaced').innerHTML = '';
+        el('o_result_matched').innerHTML = '';
+
+        this._old_target = el('i_target').value;
+
+
+        // replace special chars
+        if (el('i_evaltarget').checked)
+        {
+            targetstr = targetstr.replace(/\\t/g, "\t");
+            targetstr = targetstr.replace(/\\r/g, "\r");
+            targetstr = targetstr.replace(/\\n/g, "\n");
+            targetstr = targetstr.replace(/\\f/g, "\f");
+            targetstr = targetstr.replace(/\\v/g, "\v");
+            // eval('targetstr = "' + targetstr + '"');
+        }
+
+    /**
+        try
+        {
+            var evalstr = '/' + regexpstr + '/'
+                        + (el('i_global').checked      ? 'g' : '')
+                        + (el('i_singleline').checked  ? 's' : '')
+                        + (el('i_multiline').checked   ? 'm' : '')
+                        + (el('i_insensitive').checked ? 'i' : '')
+                        + (el('i_extended').checked    ? 'x' : '');
+            myRe = eval('new XRegExp(' + evalstr + ')');
+            regexp_is_valid = true;
+        }
+        catch(e)
+        {
+            num_results = -1;
+        }
+    /**/
+    /**/
+        if(regexpstr != '')
+        {
+            try
+            {
+                var mods =   (el('i_global').checked      ? 'g' : '')
+                           + (el('i_singleline').checked  ? 's' : '')
+                           + (el('i_multiline').checked   ? 'm' : '')
+                           + (el('i_insensitive').checked ? 'i' : '')
+                           + (el('i_extended').checked    ? 'x' : '');
+                myRe = new XRegExp(regexpstr, mods);
+                regexp_is_valid = true;
+            }
+            catch(e)
+            {
+                num_results = -1;
+            }
+        }
+    /**/
+
+        if(regexp_is_valid)
+        {
+            if(el('i_replace').checked)
+            {
+                num_results = 0;
+                // we do the replacement twice, once to get the number of results and then the actual replacement
+                Util.unHTMLize(targetstr).replace(myRe, function(){ num_results++ });
+                el('o_result_replaced').innerHTML = Util.unHTMLize(targetstr).replace(myRe, '<em>' + el('i_replacements').value + '</em>');
+                el('o_results_desc').innerHTML = 'replacements';
+            }
+            else if(el('i_split').checked)
+            {
+                var lastend = 0;
+                // var split_arr = targetstr.split(myRe, this.MAX_ITERATIONS);
+                var split_arr = String.split(targetstr, myRe, this.MAX_ITERATIONS);
+                // get the positions of the splitted pieces
+                for(var i=0; i<split_arr.length; i++)
+                {
+                    lastend = targetstr.indexOf(split_arr[i], lastend);
+                    results_arr.push(targetstr.slice(lastend, lastend + split_arr[i].length));
+                    textindex_arr[item_id_prefix + i] = new Array(lastend, lastend + split_arr[i].length);
+                }
+                num_results = results_arr.length;
+                el('o_results_desc').innerHTML = 'splits';
+            }
+            else
+            {
+                // plain old matching
+                var iterationcnt = 0;
+                while(iterationcnt++ < (el('i_global').checked ? this.MAX_ITERATIONS : 1) && (current_match = myRe.exec(targetstr)) != null)
+                {
+                    // IE5 doesn't support array.push but who gives a shit about IE5 anymore >:) harhar
+                    results_arr.push(current_match[0]);
+                    textindex_arr[item_id_prefix + (iterationcnt - 1)] = new Array(current_match.index, current_match.index + current_match[0].length);
+                    if(current_match[0].length == 0)
+                        myRe.lastIndex++;
+                    var dummy_arr = new Array()
+                    for(var i = 0; i < current_match.length; i++)
+                    {
+                        dummy_arr.push(current_match[i]);
+
+                    }
+                    substr_arr[item_id_prefix + (iterationcnt - 1)] = dummy_arr;
+                }
+                num_results = results_arr.length;
+                el('o_results_desc').innerHTML = 'match' + (num_results>1 ? 'es' : '');
+            }
+        }
+
+        try
+        {
+            // insert the results into the results pane
+            switch(num_results)
+            {
+                case -1:
+                    results_arr = new Array('---NO RESULTS FOUND! MAYBE AN EMPTY/INVALID REGEXP?---');
+                    textindex_arr = new Array();
+                    el('o_num_results').innerHTML = '';
+                    el('o_results_desc').innerHTML = 'invalid/empty regexp';
+                    break;
+                case 0:
+                    results_arr = new Array('---Nothing could be matched!---');
+                    textindex_arr = new Array();
+                    el('o_num_results').innerHTML = '';
+                    el('o_results_desc').innerHTML = 'nothing matched';
+                    break;
+                default:
+                    el('o_num_results').innerHTML = num_results;
+                    if(el('i_replace').checked)
+                        el('o_results_desc').innerHTML = 'replacement' + (num_results>1 ? 's' : '');
+                    else if(el('i_split').checked)
+                        el('o_results_desc').innerHTML = 'splits';
+                    else
+                        el('o_results_desc').innerHTML = 'match' + (num_results>1 ? 'es' : '');
+                    for(var i = 0; i < results_arr.length; i++)
+                    {
+                        var itemtext = results_arr[i];
+                        if(el('i_evaltarget').checked)
+                        {
+                            itemtext = itemtext.replace(/\t/g, '\\t');
+                            itemtext = itemtext.replace(/\r/g, '\\r');
+                            itemtext = itemtext.replace(/\n/g, '\\n');
+                            itemtext = itemtext.replace(/\f/g, '\\f');
+                            itemtext = itemtext.replace(/\v/g, '\\v');
+                        }
+
+                        itemtext = itemtext.replace(/\s/g, String.fromCharCode(160));
+                        item_prefix = i + ':>';
+                        item_suffix = ' (' + textindex_arr[item_id_prefix + i][0] + '->' + textindex_arr[item_id_prefix + i][1] + ')';
+                        itemtext = Util.cropString(itemtext, item_prefix+'<', item_suffix, this.O_RESULT_WIDTH);
+                        itemtext = item_prefix + itemtext + '<' + Util.makeString(String.fromCharCode(160), this.O_RESULT_WIDTH - itemtext.length - item_prefix.length - item_suffix.length) + item_suffix;
+                        itemtext = Util.unHTMLize(itemtext);
+                        results_arr[i] = itemtext;
+                    } // end for
+            } // end switch(num_results)
+        }
+        catch(e)
+        {
+            textindex_arr = null;
+            alert("caught:\n" + e);
+        }
+
+        // add the items to the output
+        for(var i = 0; i < results_arr.length; i++)
+        {
+            var newid               = item_id_prefix + i;
+            if(el(newid))
+                delete(el(newid));
+            var result_item         = document.createElement('li');
+            {
+                result_item.id          = newid;
+                result_item.title       = 'click to highlight, double-click to jump to target text';
+                result_item.innerHTML   = results_arr[i];
+                // alert('>'+substr_arr[result_item.id]+'<' + "\n" + '>' + textindex_arr[result_item.id][0] + '<' + "\n" + (!el('i_split').checked && !el('i_replace').checked && substr_arr[item_id_prefix + i] ? 'true' : 'false') );
+                // alert(el('i_split').checked + "\n" + el('i_replace').checked);
+                try {
+                    if(substr_arr[newid][0])
+                    {
+                        DOM.removeEvent (result_item, 'mousemove');
+                        DOM.addEvent    (result_item, 'mousemove', function() { JRX.toggleTooltip(true, this.id, substr_arr[this.id]); JRX.highlightText(textindex_arr[this.id][0], textindex_arr[this.id][1]) });
+                        DOM.removeEvent (result_item, 'mouseout');
+                        DOM.addEvent    (result_item, 'mouseout', function() { JRX.toggleTooltip(false, this.id); });
+                        DOM.removeEvent (result_item, 'click');
+                        DOM.addEvent    (result_item, 'click', function() { JRX.highlightText(textindex_arr[this.id][0], textindex_arr[this.id][1]) });
+                        DOM.removeEvent (result_item, 'dblclick');
+                        DOM.addEvent    (result_item, 'dblclick',  function() { var st = el('o_target').scrollTop; JRX.toggleTarget(true); JRX.selectTargetPortion(textindex_arr[this.id][0], textindex_arr[this.id][1]); el('i_target').scrollTop = st; el('i_target').focus(); });
+                    }
+                } catch(e){}
+            }
+            el('o_result_matched').appendChild(result_item);
+        }
+    },
+
+    setSampleOptions: function()
+    {
+        // JRX.saveUserSettings();
+        // alert(JRX._oldoptions + "\n" + JRX._oldregexp + "\n" + JRX._oldreplacement + "\n" + JRX._oldtarget);
+        var val = el('i_sample').options[el('i_sample').selectedIndex].value;
+        var sam = this._samples[val];
+
+        if(sam.options == 'clear')
+        {
+            el('i_regexp').value = '';
+            el('i_target').value = '';
+            el('i_replacements').value = '';
+            JRX.setOptInsensitive(false);
+            JRX.setOptGlobal(false);
+            JRX.setOptSingle(false);
+            JRX.setOptMulti(false);
+            JRX.setOptExtended(false);
+            JRX.setOptSplit(false);
+            JRX.setOptReplace(false);
+            JRX.setOptEval(false);
+            JRX.updateTarget();
+            JRX.updateResults();
+            return;
+        }
+
+        // alert(el('i_sample').options[el('i_sample').selectedIndex].value);
+        // alert(sam.desc + "-" + sam.expr);
+        if(sam.expr)
+            el('i_regexp').value = sam.expr;
+        if(sam.target)
+            el('i_target').value = sam.target;
+        if(sam.replacement)
+            el('i_replacements').value = sam.replacement;
+        if(sam.options)
+        {
+            JRX.setOptInsensitive(false);
+            JRX.setOptGlobal(false);
+            JRX.setOptSingle(false);
+            JRX.setOptMulti(false);
+            JRX.setOptExtended(false);
+            JRX.setOptSplit(false);
+            JRX.setOptReplace(false);
+            JRX.setOptEval(false);
+            for(var i=0; i<sam.options.length; i++)
+            {
+                // alert('setting '+sam.options[i]);
+                switch(sam.options[i])
+                {
+                    case 'i':
+                        JRX.setOptInsensitive(true);
+                        break;
+                    case 'g':
+                        JRX.setOptGlobal(true);
+                        break;
+                    case 's':
+                        JRX.setOptSingle(true);
+                        break;
+                    case 'm':
+                        JRX.setOptMulti(true);
+                        break;
+                    case 'x':
+                        JRX.setOptExtended(true);
+                        break;
+                    case 'p':
+                        JRX.setOptSplit(true);
+                        break;
+                    case 'r':
+                        JRX.setOptReplace(true);
+                        break;
+                    case 'e':
+                        JRX.setOptEval(true);
+                        break;
+                    default:
+                        alert('unknown option: '+sam.options[i]);
+                }
+            }
+        }
+        if(sam.callback)
+            eval(sam.callback);
+        JRX.resizeInput();
+        JRX.updateTarget();
+        JRX.updateResults();
+    },
+
+    saveUserSettings: function()
+    {
+        this._oldoptions = '';
+        this._oldoptions += JRX.getOptGlobal()      ? 'g' : '';
+        this._oldoptions += JRX.getOptSingle()      ? 's' : '';
+        this._oldoptions += JRX.getOptMulti()       ? 'm' : '';
+        this._oldoptions += JRX.getOptInsensitive() ? 'i' : '';
+        this._oldoptions += JRX.getOptExtended()    ? 'x' : '';
+        this._oldoptions += JRX.getOptSplit()       ? 'p' : '';
+        this._oldoptions += JRX.getOptReplace()     ? 'r' : '';
+        this._oldoptions += JRX.getOptEval()        ? 'e' : '';
+        this._oldregexp      = el('i_regexp').value;
+        this._oldreplacement = el('i_replacements').value;
+        this._oldtarget      = el('i_target').value;
+        this._samples['u0'].options     = this._oldoptions;
+        this._samples['u0'].expr        = this._oldregexp;
+        this._samples['u0'].target      = this._oldtarget;
+        this._samples['u0'].replacement = this._oldreplacement;
+        // alert(this._oldoptions + "\n" + this._oldregexp + "\n" + this._oldreplacement + "\n" + this._oldtarget);
+    },
+
+
+    resizeInput: function()
+    {
+        var iArr = el('i_regexp').value.split("\n");
+        var rArr = el('i_replacements').value.split("\n");
+        var len = Math.max( (iArr ? iArr.length : 0), (rArr && el('i_replacements').className != 'hidden' ? rArr.length : 0) );
+        // alert("Len: "+len +"\n" + iArr.length +"\n" + rArr.length);
+
+        /* resize input if line number is:
+          is 1 => 2
+          btw 2 & 5 => 5
+          btw 6 & 9 => 9
+          more => 10
+        */
+        var rows = 10;
+        if(len-6 <= 3) rows = 9;
+        if(len-2 <= 3) rows = 5;
+        if(len-1 <= 0) rows = 1;
+
+        // self.status = "len: " + el('i_regexp').value.length + ", cols: " + el('i_regexp').cols + ", mod: " + Math.ceil(el('i_regexp').value.length / el('i_regexp').cols);
+        // rows = Math.ceil(el('i_regexp').value.length / el('i_regexp').cols);
+        rows = Math.max(len, Math.ceil(el('i_regexp').value.length / el('i_regexp').cols), Math.ceil(el('i_replacements').value.length / el('i_replacements').cols));
+        el('i_regexp').rows = rows;
+        el('i_regexp').style.height       = (rows*1.4)+'em';
+        el('i_replacements').style.height = (rows*1.4)+'em';
+    },
+
+    checkMultiline: function()
+    {
+        el('i_multiline').disabled = !is_gecko;
+        el('i_singleline').disabled = !is_gecko;
+    },
+
+    init: function()
+    {
+        DOM.addEvent(el('help'),            'click',     function() { JRX.toggleHelpAbout(); return false; });
+        // DOM.addEvent(el('i_sample'),        'select',    function() { JRX.setSampleOptions(); });
+        DOM.addEvent(el('i_sample'),        'change',    function() { JRX.setSampleOptions(); });
+        DOM.addEvent(el('i_global'),        'click',     function() { JRX.updateResults(); });
+        DOM.addEvent(el('i_singleline'),    'click',     function() { JRX.updateResults(); });
+        DOM.addEvent(el('i_multiline'),     'click',     function() { JRX.updateResults(); });
+        DOM.addEvent(el('i_insensitive'),   'click',     function() { JRX.updateResults(); });
+        DOM.addEvent(el('i_extended'),      'click',     function() { JRX.updateResults(); });
+        DOM.addEvent(el('i_split'),         'click',     function() { JRX.setOptSplit(el('i_split').checked); JRX.focusRegExp(); JRX.resizeInput(); JRX.updateResults(); });
+        DOM.addEvent(el('i_replace'),       'click',     function() { JRX.setOptReplace(el('i_replace').checked); JRX.focusRegExp(); JRX.resizeInput(); JRX.updateResults(); });
+
+        DOM.addEvent(el('i_compact'),       'click',     function() { JRX.toggleVerbose(); });
+        DOM.addEvent(el('i_miniref'),       'click',     function() { JRX.toggleMiniRef(); });
+    // TODO: DELETE   DOM.addEvent(el('cleartext'),       'click',     function() { clearTargetText(); JRX.updateTarget(); setTargetFocus(); });
+        DOM.addEvent(el('i_evaltarget'),    'click',     function() { JRX.updateResults(); el('i_escaperesults').checked = el('i_evaltarget').checked; });
+        DOM.addEvent(el('i_regexp'),        'keyup',     function() { JRX.updateResults(); JRX.resizeInput(); JRX.focusRegExp(); });
+        DOM.addEvent(el('i_regexp'),        'change',    function() { JRX.saveUserSettings(); });
+        DOM.addEvent(el('i_replacements'),  'keyup',     function() { JRX.updateResults(); JRX.resizeInput(); });
+        DOM.addEvent(el('i_replacements'),  'change',    function() { JRX.saveUserSettings(); });
+        DOM.addEvent(el('i_target'),        'keyup',     function() { JRX.updateTarget(); JRX.updateResults(); });
+        DOM.addEvent(el('i_target'),        'change',    function() { JRX.updateTarget(); JRX.updateResults(); JRX.saveUserSettings(); });
+        DOM.addEvent(el('o_target'),        'focus',     function() { JRX.toggleTarget(true); });
+        DOM.addEvent(el('o_target'),        'click',     function() { JRX.toggleTarget(true); });
+        DOM.addEvent(el('o_result_block'),  'mouseout',  function() { JRX.toggleTarget(true); });
+        DOM.addEvent(el('helpme'),          'focus',     Util.theAnswerToLifeTheUniverseAndEverything);
+
+        CookieManager.readSettings();
+
+        this.checkMultiline();
+        this.toggleOutput();
+        this.toggleMiniRef();
+        this.toggleVerbose();
+
+        this._old_target = el('i_target').value;
+
+        this.saveUserSettings();
+        this.resizeInput();
+        this.updateTarget();
+        this.updateResults();
+    }
+} // end JRX
+// alert("JRX obj:" + JRX.getRegExp());
+
+
+
+// This awesome library adds some extended functionality to stock JS Regexp-implementation
+// The version below is the "minified" one
+// XRegExp 0.5.1, <http://stevenlevithan.com/regex/xregexp/>, MIT License
+//XRegExp 0.5.1, <stevenlevithan.com>, MIT License
+if(!window.XRegExp){(function(){var D={exec:RegExp.prototype.exec,match:String.prototype.match,replace:String.prototype.replace,split:String.prototype.split},C={part:/(?:[^\\([#\s.]+|\\(?!k<[\w$]+>)[\S\s]?|\((?=\?(?!#|<[\w$]+>)))+|(\()(?:\?(?:(#)[^)]*\)|<([$\w]+)>))?|\\k<([\w$]+)>|(\[\^?)|([\S\s])/g,replaceVar:/(?:[^$]+|\$(?![1-9$&`']|{[$\w]+}))+|\$(?:([1-9]\d*|[$&`'])|{([$\w]+)})/g,extended:/^(?:\s+|#.*)+/,quantifier:/^(?:[?*+]|{\d+(?:,\d*)?})/,classLeft:/&&\[\^?/g,classRight:/]/g},A=function(H,F,G){for(var E=G||0;E<H.length;E++){if(H[E]===F){return E}}return -1},B=/()??/.exec("")[1]!==undefined;XRegExp=function(N,H){if(N instanceof RegExp){if(H!==undefined){throw TypeError("can't supply flags when constructing one RegExp from another")}return N.addFlags()}var H=H||"",E=H.indexOf("s")>-1,J=H.indexOf("x")>-1,O=false,Q=[],G=[],F=C.part,K,I,M,L,P;F.lastIndex=0;while(K=D.exec.call(F,N)){if(K[2]){if(!C.quantifier.test(N.slice(F.lastIndex))){G.push("(?:)")}}else{if(K[1]){Q.push(K[3]||null);if(K[3]){O=true}G.push("(")}else{if(K[4]){L=A(Q,K[4]);G.push(L>-1?"\\"+(L+1)+(isNaN(N.charAt(F.lastIndex))?"":"(?:)"):K[0])}else{if(K[5]){if(N.charAt(F.lastIndex)==="]"){G.push(K[5]==="["?"(?!)":"[\\S\\s]");F.lastIndex++}else{I=XRegExp.matchRecursive("&&"+N.slice(K.index),C.classLeft,C.classRight,"",{escapeChar:"\\"})[0];G.push(K[5]+I+"]");F.lastIndex+=I.length+1}}else{if(K[6]){if(E&&K[6]==="."){G.push("[\\S\\s]")}else{if(J&&C.extended.test(K[6])){M=D.exec.call(C.extended,N.slice(F.lastIndex-1))[0].length;if(!C.quantifier.test(N.slice(F.lastIndex-1+M))){G.push("(?:)")}F.lastIndex+=M-1}else{G.push(K[6])}}}else{G.push(K[0])}}}}}}P=RegExp(G.join(""),D.replace.call(H,/[sx]+/g,""));P._x={source:N,captureNames:O?Q:null};return P};RegExp.prototype.exec=function(I){var G=D.exec.call(this,I),F,H,E;if(G){if(B&&G.length>1){E=new RegExp("^"+this.source+"$(?!\\s)",this.getNativeFlags());D.replace.call(G[0],E,function(){for(H=1;H<arguments.length-2;H++){if(arguments[H]===undefined){G[H]=undefined}}})}if(this._x&&this._x.captureNames){for(H=1;H<G.length;H++){F=this._x.captureNames[H-1];if(F){G[F]=G[H]}}}if(this.global&&this.lastIndex>(G.index+G[0].length)){this.lastIndex--}}return G};String.prototype.match=function(E){if(!(E instanceof RegExp)){E=new XRegExp(E)}if(E.global){return D.match.call(this,E)}return E.exec(this)};String.prototype.replace=function(F,G){var E=(F._x||{}).captureNames;if(!(F instanceof RegExp&&E)){return D.replace.apply(this,arguments)}if(typeof G==="function"){return D.replace.call(this,F,function(){arguments[0]=new String(arguments[0]);for(var H=0;H<E.length;H++){if(E[H]){arguments[0][E[H]]=arguments[H+1]}}return G.apply(window,arguments)})}else{return D.replace.call(this,F,function(){var H=arguments;return D.replace.call(G,C.replaceVar,function(J,I,M){if(I){switch(I){case"$":return"$";case"&":return H[0];case"`":return H[H.length-1].slice(0,H[H.length-2]);case"'":return H[H.length-1].slice(H[H.length-2]+H[0].length);default:var K="";I=+I;while(I>E.length){K=D.split.call(I,"").pop()+K;I=Math.floor(I/10)}return(I?H[I]:"$")+K}}else{if(M){var L=A(E,M);return L>-1?H[L+1]:J}else{return J}}})})}};String.prototype.split=function(J,F){if(!(J instanceof RegExp)){return D.split.apply(this,arguments)}var G=[],E=J.lastIndex,K=0,I=0,H;if(F===undefined||+F<0){F=false}else{F=Math.floor(+F);if(!F){return[]}}if(!J.global){J=J.addFlags("g")}else{J.lastIndex=0}while((!F||I++<=F)&&(H=J.exec(this))){if(J.lastIndex>K){G=G.concat(this.slice(K,H.index),(H.index===this.length?[]:H.slice(1)));K=J.lastIndex}if(!H[0].length){J.lastIndex++}}G=K===this.length?(J.test("")?G:G.concat("")):(F?G:G.concat(this.slice(K)));J.lastIndex=E;return G}})()}RegExp.prototype.getNativeFlags=function(){return(this.global?"g":"")+(this.ignoreCase?"i":"")+(this.multiline?"m":"")+(this.extended?"x":"")+(this.sticky?"y":"")};RegExp.prototype.addFlags=function(A){var B=new XRegExp(this.source,(A||"")+this.getNativeFlags());if(this._x){B._x={source:this._x.source,captureNames:this._x.captureNames?this._x.captureNames.slice(0):null}}return B};RegExp.prototype.call=function(A,B){return this.exec(B)};RegExp.prototype.apply=function(B,A){return this.exec(A[0])};XRegExp.cache=function(C,A){var B="/"+C+"/"+(A||"");return XRegExp.cache[B]||(XRegExp.cache[B]=new XRegExp(C,A))};XRegExp.escape=function(A){return A.replace(/[-[\]{}()*+?.\\^$|,#\s]/g,"\\$&")};XRegExp.matchRecursive=function(P,D,S,F,B){var B=B||{},V=B.escapeChar,K=B.valueNames,F=F||"",Q=F.indexOf("g")>-1,C=F.indexOf("i")>-1,H=F.indexOf("m")>-1,U=F.indexOf("y")>-1,F=F.replace(/y/g,""),D=D instanceof RegExp?(D.global?D:D.addFlags("g")):new XRegExp(D,"g"+F),S=S instanceof RegExp?(S.global?S:S.addFlags("g")):new XRegExp(S,"g"+F),I=[],A=0,J=0,N=0,L=0,M,E,O,R,G,T;if(V){if(V.length>1){throw SyntaxError("can't supply more than one escape character")}if(H){throw TypeError("can't supply escape character when using the multiline flag")}G=XRegExp.escape(V);T=new RegExp("^(?:"+G+"[\\S\\s]|(?:(?!"+D.source+"|"+S.source+")[^"+G+"])+)+",C?"i":"")}while(true){D.lastIndex=S.lastIndex=N+(V?(T.exec(P.slice(N))||[""])[0].length:0);O=D.exec(P);R=S.exec(P);if(O&&R){if(O.index<=R.index){R=null}else{O=null}}if(O||R){J=(O||R).index;N=(O?D:S).lastIndex}else{if(!A){break}}if(U&&!A&&J>L){break}if(O){if(!A++){M=J;E=N}}else{if(R&&A){if(!--A){if(K){if(K[0]&&M>L){I.push([K[0],P.slice(L,M),L,M])}if(K[1]){I.push([K[1],P.slice(M,E),M,E])}if(K[2]){I.push([K[2],P.slice(E,J),E,J])}if(K[3]){I.push([K[3],P.slice(J,N),J,N])}L=N}else{I.push(P.slice(E,J))}if(!Q){break}}}else{D.lastIndex=S.lastIndex=0;throw Error("subject data contains unbalanced delimiters")}}if(J===N){N++}}if(Q&&!U&&K&&K[0]&&P.length>L){I.push([K[0],P.slice(L),L,P.length])}D.lastIndex=S.lastIndex=0;return I};
+
+
+
+var EmailDecryptor =
+{
+    // this portion courtesy of: Jim Tucek
+    // converted to object syntax
+
+    // Speaking of Java, this particular script is (C) Copyright 2002 Jim Tucek
+    // If you wish to use my Email Encryption script, these comments must be left
+    // alone!  That is all.
+
+    // Visit www.jracademy.com/~jtucek/ for script information and a bit of help
+    // setting it up, or www.jracademy.com/~jtucek/email.html for contact
+    // information.
+
+    // A brief history of this script can be found (and it's rather entertaining)
+    // at www.jracademy.com/~jtucek/eencrypt.html
+
+    goForth: function(c, n, d)
+    {
+        c += ' ';
+        var length = c.length;
+        var number = 0;
+        var bar = 0;
+        var answer = '';
+        for(var i = 0; i < length; i++)
+        {
+            number = 0;
+            while(c.charCodeAt(i) != 32)
+            {
+                number = number * 10;
+                number = number + c.charCodeAt(i)-48;
+                i++;
+            }
+            answer += String.fromCharCode(this.decrypt(number,n,d));
+        }
+        return answer;
+    },
+
+    decrypt: function(c,n,d)
+    {
+        var foo, bar;
+        // Split exponents up
+        if (d % 2== 0)
+        {
+            bar = 1;
+            for(var i = 1; i <= d/2; i++)
+            {
+                foo = (c*c) % n;
+                bar = (foo*bar) % n;
+            }
+        }
+        else
+        {
+            bar = c;
+            for(var i = 1; i <= d/2; i++)
+            {
+                foo = (c*c) % n;
+                bar = (foo*bar) % n;
+            }
+        }
+        return bar;
+    },
+
+    dumpEmail: function()
+    {
+        var emailAddress = this.goForth('19960 31214 2956 9983 8670 16115 12124 31214 18007 11197 13184 19211 15558 30912 3065 29611 3065 8845 18057 21918 32133 13714 11821 13184 2956 21918', '34933', '29623');
+        //emailAddress is the decrypted version of your email address, ie none@none.com
+        document.write('<a href="mailto:' + emailAddress + '" title="send an email about JRX">drop me an email.</a>');
+    }
+} // end EmailDecryptor
+
+
+var CookieManager =
+{
+    /*
+     These 2 functions courtesy of
+     http://javascript.about.com/library/blh2d.htm
+     These 2 are used to serialize/deserialize textareas' values, to be used in cookies
+    */
+    hD: "0123456789ABCDEF",
+    d2h: function(d)
+    {
+        var h = this.hD.substr(d&15, 1);
+        while(d > 15) { d >>= 4; h = this.hD.substr(d&15, 1)+h; }
+        return h;
+    },
+    h2d: function(h)
+    {
+        return parseInt(h, 16);
+    },
+
+    saveSettings: function()
+    {
+        var now = new Date();
+        var expireat = new Date(now.getTime() + 1000 * 365 * 24 * 60 * 60);
+        var cookieval = 'jrxcookie=';
+
+        cookieval = cookieval + 'i_global'      + "-" + el('i_global').checked      + '+';
+        cookieval = cookieval + 'i_singleline'  + "-" + el('i_singleline').checked  + '+';
+        cookieval = cookieval + 'i_multiline'   + "-" + el('i_multiline').checked   + '+';
+        cookieval = cookieval + 'i_insensitive' + "-" + el('i_insensitive').checked + '+';
+        cookieval = cookieval + 'i_extended'    + "-" + el('i_extended').checked    + '+';
+        cookieval = cookieval + 'i_split'       + "-" + el('i_split').checked       + '+';
+        cookieval = cookieval + 'i_compact'     + "-" + el('i_compact').checked     + '+';
+        cookieval = cookieval + 'i_miniref'     + "-" + el('i_miniref').checked     + '+';
+        cookieval = cookieval + 'i_evaltarget'  + "-" + el('i_evaltarget').checked  + '+';
+        cookieval = cookieval + 'i_replace'     + "-" + el('i_replace').checked  + '+';
+
+
+        var t_regexp = el('i_regexp').value;
+        var t_target = el('i_target').value;
+        var t_replac = el('i_replacements').value;
+        var t_regexp_enc = '';
+        var t_target_enc = '';
+        var t_replac_enc = '';
+        var hc;         // returned hex-code
+        for(var l in t_regexp)
+        {
+            hc = this.d2h(String.charCodeAt(t_regexp[l]));
+            t_regexp_enc = t_regexp_enc + (hc.length == 1 ? '0' : '') + hc;
+        }
+        for(l in t_target)
+        {
+            hc = this.d2h(String.charCodeAt(t_target[l]));
+            t_target_enc = t_target_enc + (hc.length == 1 ? '0' : '') + hc;
+        }
+        for(l in t_replac)
+        {
+            hc = this.d2h(String.charCodeAt(t_replac[l]));
+            t_replac_enc = t_replac_enc + (hc.length == 1 ? '0' : '') + hc;
+        }
+        cookieval = cookieval + 'i_regexp'      + "-" + t_regexp_enc        + '+';
+        cookieval = cookieval + 'i_target'      + "-" + t_target_enc        + '+';
+        cookieval = cookieval + 'i_replacements'+ "-" + t_replac_enc        + '' ;   // note no + here!
+
+        cookieval = cookieval + ';expires=' + expireat.toGMTString() + ';';
+
+        document.cookie = cookieval;
+    },
+
+    readSettings: function()
+    {
+        if(document.cookie)
+        {
+            var cookiearr, cookiename, cookieval;
+            var opts = document.cookie.substr(document.cookie.indexOf("=")+1).split('+');
+            for(var o in opts)
+            {
+                cookiearr  = opts[o].split("-");
+                cookiename = cookiearr[0];
+                cookieval  = cookiearr[1];
+                switch(el(cookiename).type)
+                {
+                    case 'checkbox':
+                        el(cookiename).checked = cookieval == 'true' || cookieval == 'checked' ? 'checked' : '';
+                        break;
+                    case 'textarea':
+                        var os = ''
+                        for(var i = 0; i < cookieval.length; i = i + 2)
+                            os = os + String.fromCharCode(this.h2d('0x'+cookieval.substr(i,2)));
+                        el(cookiename).value = os;
+                        break;
+                    default:
+                        alert("unidentified object in cookie:\nname: " + cookiename + "\nvalue: " + cookieval);
+                }
+            }
+        }
+    }
+} // end CookieManager
+
+
+var Util =
+{
+    unHTMLize: function(str)
+    {
+        return str ? str.replace(/&/, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : str;
+    },
+
+    makeString: function(ch, times)
+    {
+        var outstr = '';
+        for(var i=0; i<times; i++)
+            outstr = outstr + ch;
+        return outstr;
+    },
+
+    cropString: function(str, prefix, suffix, strlen)
+    {
+        if(str.length <= strlen - prefix.length - suffix.length)
+            return str;
+        else
+            return str.substr(0, strlen - prefix.length - suffix.length) + String.fromCharCode(0x2026);
+    },
+
+    theAnswerToLifeTheUniverseAndEverything: function()
+    {
+        alert(42);
+    }
+} // end CookieManager
+
+
+var DOM =
+{
+    /*
+     these 2 functions courtesy of
+     http://ejohn.org/projects/flexible-javascript-events/
+     addEvent( document.getElementById('foo'), 'click', doSomething );
+     addEvent( obj, 'mouseover', function(){ alert('hello!'); } );
+     removeEvent( object, eventType, function );
+
+     These 2 are used to add custom eventhandlers
+     Don't ask me if this is a better way than simply using onClick, onChange, etc.
+     I'm not sure yet.
+    */
+    addEvent: function( obj, type, fn )
+    {
+        if ( obj.attachEvent )
+        {
+            obj['e'+type+fn] = fn;
+            obj[type+fn] = function() { obj['e'+type+fn]( window.event ); }
+            obj.attachEvent( 'on'+type, obj[type+fn] );
+        }
+        else
+        {
+            obj.addEventListener( type, fn, false );
+        }
+    },
+
+    removeEvent: function( obj, type, fn )
+    {
+        if ( obj.detachEvent )
+        {
+            obj.detachEvent( 'on'+type, obj[type+fn] );
+            obj[type+fn] = null;
+        }
+        else
+        {
+            obj.removeEventListener( type, fn, false );
+        }
+    }
+} // end DOM
+
+//-->
+</script>
+
+<!------------------------------------------------------------------------------------------------->
+
+
+</head>
+
+<body lang="en" onLoad="JavaScript:JRX.init();" onUnload="JavaScript:CookieManager.saveSettings();" background="data:image/gif;base64,R0lGODlhAQACALMAAPf39////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAAAAAQACAAAEAzCACAA7">
+
+<div id="pageheader">
+<h1><abbr title="Javascript Regular eXpressions">JRX</abbr>: real-time JavaScript <abbr title="Regular Expression">RegExp</abbr> evaluator <script type="text/javascript">document.write('<span title="'+'Last update: '+(new Date(document.lastModified)).toLocaleString()+'" style="border-bottom: 1px dotted; display: inline;">')</script>v1.1b16<script type="text/javascript">document.write('</span>')</script></h1>
+
+<a id="help" title="Program info, a RegExp quick reference &amp; and miscellaneous" accesskey="A"><u>A</u>bout</a><br/>
+<!--<a href="jrx.html">Latest beta!</a>-->
+</div>
+
+<div id="help_about">
+
+
+<h3>About</h3>
+
+<p class="notes">JRX is inspired by the RX tool of <a href="http://www.activestate.com/Products/Komodo/" target="_blank" title="Try Komodo as well">ActiveState's Komodo</a> IDE. Although RX is more powerful and supports Perl Regular Expressions (almost?) fully, I've needed an always-accessible and installation-free implementation.<br/>
+
+So, here it is: a single, ultra-compact HTML file, <strong>without</strong> any external file ;)<br/>
+Save it to your disk if you like, or use online for latest version.</p>
+
+<p class="notes">You might also be interested in <a href="http://ted.mielczarek.org/code/mozilla/extensiondev/" target="_blank">Ted Mielczarek's <em>Extension Developer's Extension</em></a>, it includes JRX among some other very useful stuff, it's terrific!</p>
+
+<p class="w"><em>This is <b>not</b> an AJAX application, you can save the page locally and use it off-line.</em></p>
+
+
+<h3>Compatibility</h3>
+
+<p>I'd tested older versions of JRX with Mozilla 1.3, IE 6.0 and Opera 7.1, and JRX worked OK in all of them.<br/>
+However, IE6 and Opera <strike>have</strike> had back then some funny bugs with JavaScript and CSS, and I'm getting tired of IEs inferior CSS/JS-support (I'm not sure of IE7, I don't have it).
+Therefore, I was testing the latest versions only with <a href="http://www.mozilla.org/releases/" target="_blank" title="Use a real browser, use Firefox ;)">Mozilla Firefox</a> &gt;=v1.5; JRX may or may not work in Opera.<br/>
+I'd be happy if you can come up with code submissions which fix things with IE/Opera, but most likely I will not do it myself.<br/>
+
+I'm still keeping <a href="http://www.cuneytyilmaz.com/prog/jrx/jrx.nongecko.html" target="_blank">the latest working version for IE/Opera</a> anyway.<br/>
+Have fun.</p>
+
+
+<h3>Recent changes</h3>
+
+<ul>
+<li>I've added matched substrings' starting and ending positions to the results list</li>
+<li>Clicking or hovering on the results will highlight matched portion on the target text and double-clicking will jump to the textarea; <strike>unfortunately you cannot scroll the textareas to the selected portion :(</strike></li>
+
+<li>Hovering over the results will show the parenthesized substrings</li>
+<li>Target text can be evaluated before the matching is done (see below for explanation)</li>
+<li>RegExp-based replacements; also if you have parenthesized groups, you can use $1, $2, etc. or $&</li>
+<li><strike>I've changed the split code, it now does <strong>not</strong> use String.split(), since String.split() doesn't know about matched portions' positions</strike></li>
+<li>Settings are automatically saved via cookies (yippee!) and your last regexp and text will be preserved; note that cookies will <strong>not</strong> work if you work locally</li>
+
+<li>There's a compact mode now, JRX should easily fit into smallest browser windows (see the note about this option &amp; re-distribution below)</li>
+<li>Number of iterations is hard-limited to 250, in order to avoid infinite evaluations (e.g. due to backtracking)</li>
+<li>Got rid of &quot;Auto-update&quot; option, &quot;Refresh&quot; &amp; &quot;Clear text&quot; buttons</li>
+
+<li>Changed the accesskeys so that most of them can be accessed with the options' first letters</li>
+<li>Fixed a bug with regexps using *, e.g. /b*/ matched against "Hello world" repeatedly the first empty string (pos:0-&gt;0)</li>
+<li>Lots of small changes and some cleanup in code</li>
+<li>Unfortunately, I have no time to implement lots lots of workarounds for IE's bugs, so I will rarely test JRX with IE from now on and write code for IE only if it's extremely easy!</li>
+</ul>
+<p>Unless new bugs are discovered, I'll add no more features to this beta and release it as final.</p>
+
+
+<h3>To do</h3>
+
+<p>I'm considering to add a few other tools and cosmetic changes, such as:</p>
+<ul>
+<li>Regexp examples for common tasks, e.g. matching dates, emails, domain names, etc.</li>
+<li>Perl-style <em>extended</em> regular expressions, i.e. with multiple lines, comments, etc, but it's no top priority at the moment; contact me if you can help on this</li>
+<li>A tabbed interface (why?!?)</li>
+<li>Real-time JavaScript Evaluator(why?!?, there is this awesome <a href="http://www.squarefree.com/shell/" target="_blank">JavaScript Shell</a> and another terrific <a href="http://www.squarefree.com/jsenv/" target="_blank">JavaScript Development Environment</a>)</li>
+
+<li>Hexadecimal&lt;-&gt;Decimal converter</li>
+<li>Encoder-Decoder using un/escape(), de/encodeURI(), de/encodeURIComponent() (I'm letting myself go)</li>
+<li>The subroutine which will compute the answer to life, the universe and everything</li>
+</ul>
+<p>Though these might be useful to do everything on one place, it will also bloat the page, so they might be never implemented.</p>
+
+
+<h3>Mini FAQ</h3>
+
+<p class="q">Q. Why are my results shown twice, if I use global and parentheses?</p>
+
+<p class="a"><strike>A. Results always include $0, which means, if you use, e.g. (^.*$), $0 is implicitly the whole matched string and $1 is your backreference!<br/>
+Now if you pack your whole regexp into parentheses, $0 &amp; $1 will be naturally the same, therefore shown twice:)<br/>
+...try the above regexp with multiline(m) &amp; global(g), and you'll see.</strike><br/>
+Results show only $0 now, hover over the results to see the substrings.</p>
+
+<p class="q">Q. What does "Eval target text" do?</p>
+
+<p class="a">A. It substitutes escaped chars \t \r \n \f \v with their respective values, before matching the regexp!<br/>
+To see this in action enter "foo \t bar" as target text and "(\S+)(\s+)(\S+)" as regexp<br/>
+and try matching with and without this options.<br/>
+Note that the inline linebreaks in the target are <b>not</b> escaped; you should use \n in that case.<br/>
+Also note that the highlighting does not function well when this option is active, yet.</p>
+
+
+<p class="q">Q. Why is text length shown &quot;incorrectly&quot; if use newlines?</p>
+
+<p class="a">A. (Firefox') HTML textareas interpret Enter key as ASCII code 0x0A (aka \n) and &quot;a&lt;ENTERKEY&gt;b&quot; returns a length of 3 whereas other editors show a length of 4 using 0x0D+0x0A (aka \r\n).<br/>
+So be cautious if text length is extremely important for you and/or if you match/split by \n, \s, etc.</p>
+
+
+<p class="q">Q. How can I backreference inside my regexp?</p>
+
+<p class="a">A. For example, to match ISO-type dates (yyyy-mm-dd) you could use (\d{4})([/.-])(\d{2})\2(\d{2}) (this is a practical example, but not validating). Note the <b>\2</b> it ensures that the same delimiter is used afterwards.<br/>
+
+BTW, a complete date-validating regexp is nearly impossible, due to the leap years, but an approximate solution would be:
+<b>(\d{4})([/.-])(0\d|1[0-2])\2([012]\d|3[01])</b>, though this would match 9876-02-30, too, I'll leave the rest as an exercise.</p>
+
+
+
+<h3>Keyboard shortcuts</h3>
+
+<p>You can recognize shortcuts on underlined letters. Firefox used to have ALT as modifier key and later versions use ALT-SHIFT.</p>
+
+<table border="0" cellpadding="2" cellspacing="0" summary="Keyboard shortcuts table">
+	<tr><td>Modifier-<strong>E</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>E</strong>xpression box</td></tr>
+
+	<tr><td>Modifier-<strong>T</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>T</strong>arget text box</td></tr>
+	<tr><td>Modifier-<strong>A</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>A</strong>bout</td></tr>
+	<tr><td>Modifier-<strong>G</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>G</strong>lobal matching</td></tr>
+
+	<tr><td>Modifier-<strong>M</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>M</strong>ulti-line mode</td></tr>
+	<tr><td>Modifier-<strong>S</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>S</strong>ingle-line mode</td></tr>
+	<tr><td>Modifier-<strong>I</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>I</strong>gnore case</td></tr>
+
+	<tr><td>Modifier-<strong>I</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>e<strong>X</strong>tended regexps</td></tr>
+	<tr><td>Modifier-<strong>P</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>s<strong>P</strong>lit mode</td></tr>
+	<tr><td>Modifier-<strong>R</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>R</strong>eplace mode</td></tr>
+
+	<tr><td>Modifier-<strong>C</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>C</strong>ompact mode</td></tr>
+	<tr><td>Modifier-<strong>H</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>s<strong>H</strong>ow mini reference</td></tr>
+</table>
+
+<h3>Quick Regular Expressions reference</h3>
+
+<table border="0" cellpadding="2" cellspacing="0" summary="Quick Regular Expressions reference">
+    <tr><td><b>\d     </b></td><td>any decimal digit                                                   </td></tr>
+    <tr><td><b>\D     </b></td><td>any char that is not a decimal digit                                </td></tr>
+    <tr><td><b>\s     </b></td><td>any whitespace char                                                 </td></tr>
+    <tr><td><b>\S     </b></td><td>any char that is not a whitespace                                   </td></tr>
+
+    <tr><td><b>\w     </b></td><td>any <em>word</em> char                                              </td></tr>
+    <tr><td><b>\W     </b></td><td>any <em>non-word</em> char                                          </td></tr>
+    <tr><td><b>\b     </b></td><td>word boundary; inside char-class: backspace                         </td></tr>
+
+    <tr><td><b>\B     </b></td><td>not a word boundary                                                 </td></tr>
+    <tr><td><b>\A     </b></td><td>start of subject (independent of multiline mode)                    </td></tr>
+    <tr><td><b>\Z     </b></td><td>end of subject or newline at end (independent of multiline mode)    </td></tr>
+    <tr><td><b>\z     </b></td><td>end of subject(independent of multiline mode)                       </td></tr>
+    <tr><td><b>[]     </b></td><td>char class                                                          </td></tr>
+
+    <tr><td><b>^      </b></td><td>beginning of line; inside char-class: negate                        </td></tr>
+    <tr><td><b>$      </b></td><td>end of line                                                         </td></tr>
+    <tr><td><b>()     </b></td><td>capturing parentheses                                               </td></tr>
+    <tr><td><b>|      </b></td><td>alternation                                                         </td></tr>
+    <tr><td><b>*      </b></td><td>zero or more time, equals to {0,}                                   </td></tr>
+
+    <tr><td><b>+      </b></td><td>one or more time, equals to {1,}                                    </td></tr>
+    <tr><td><b>?      </b></td><td>zero or one time, equals to {0,1}                                   </td></tr>
+    <tr><td><b>{m,n}  </b></td><td>preceding char or group minimal m, maximal n times                  </td></tr>
+    <tr><td><b>(?:)   </b></td><td>non-capturing parentheses                                           </td></tr>
+    <tr><td><b>(?=x)  </b></td><td>lookahead, i.e. only if followed by x                               </td></tr>
+
+    <tr><td><b>(?!x)  </b></td><td>negated lookahead, i.e. only if not followed by x                   </td></tr>
+    <tr><td><b>(?&lt;x)   </b></td><td><strike>lookbehind</strike>, not supported by JavaScript            </td></tr>
+    <tr><td><b>(?&lt;!x)  </b></td><td><strike>negated lookbehind</strike>, not supported by JavaScript    </td></tr>
+    <tr><td><b>\f     </b></td><td>form-feed                                                           </td></tr>
+
+    <tr><td><b>\t     </b></td><td>tab                                                                 </td></tr>
+    <tr><td><b>\v     </b></td><td>vertical-tab                                                        </td></tr>
+    <tr><td><b>\r     </b></td><td>carriage return                                                     </td></tr>
+    <tr><td><b>\n     </b></td><td>new line (unix:\n, win:\r\n, mac:\r)                            </td></tr>
+    <tr><td><b>\xhh   </b></td><td>hexadecimal code of char (2 hex)                                    </td></tr>
+
+    <tr><td><b>\uhhhh </b></td><td>unicode code of char (4 hex)                                        </td></tr>
+</table>
+
+
+<h3>Copy issues</h3>
+
+<p>Distributed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank" title="for details see GNU License">GNU License</a>.<br/>
+Modifications are allowed as long as credits are preserved and <u>visible</u>,</p>
+
+<p class="w">i.e. you may not re-distribute this page in its compact form, i.e. with page header and footer being hidden!</p>
+
+<p>Email portion of this program courtesy of: <a href="http://www.jracademy.com/~jtucek/" target="_blank">Jim Tucek</a></p>
+
+<p>Other portions of code which are used in this page are fully documented and credited in the source code.</p>
+
+
+<h3>Credits and thanks</h3>
+
+<ul>
+<li>Ted Mielczarek: For including JRX on his awesome <a href="http://ted.mielczarek.org/code/mozilla/extensiondev/" target="_blank">Extension Developer's Extension</a></li>
+
+<li>Steven Levithan: For his awesome <a href="http://stevenlevithan.com/regex/xregexp/" target="_blank">XRegExp library</a>, it adds some amazing features to stock JS capabilities.</li>
+<li>Luciano Espirito Santo: for his feedback about help, usability and that cute smiley :)</li>
+<li>Yann Coupin: for his marvellous idea of splitting feature and his coding (I've replaced it later though)</li>
+<li>Will Moffat: he came up with the great idea adding the eval-target option</li>
+<li>Numerous other people: for all their feedback</li>
+</ul>
+
+</div>
+<p id="pagenews">Finally <strong>/s</strong> & <strong>/x</strong> and named captures, thanks to <a href="http://stevenlevithan.com/regex/xregexp/" target="_blank">XRegExp</a>!</p>
+
+<form name="jrxform" id="jrxform" action="" onSubmit="JavaScript:return false;">
+    <fieldset id="fs_regexp">
+        <legend id="l_regexp">Reg<u>E</u>xp
+        <!-- TODO: implement-->
+            <select id="i_sample">
+                <option value="dummy">--Samples--</option>
+                <option value="u0">last user expr</option>
+                <option value="dg">/g</option>
+
+                <option value="ds">/s</option>
+                <option value="dm">/m</option>
+                <option value="di">/i</option>
+                <option value="dx">/x</option>
+                <option value="dp">split</option>
+                <option value="dr">replace</option>
+
+                <option value="de">eval</option>
+                <option value="xr">XRegExp named match</option>
+                <option value="s0">simple mail</option>
+                <option value="s1">simple url</option>
+                <option value="cl">clear</option>
+            </select>
+
+        <!-- -->
+        </legend>
+        <textarea id="i_regexp" class="full" cols="60" rows="1" wrap="virtual" accesskey="e">\s+</textarea>
+        <textarea id="i_replacements" class="hidden" cols="30" rows="1" wrap="virtual" accesskey="t">{$&}</textarea><br/>
+        <div id="block_opt">
+            <label accesskey="g"><input type="checkbox" id="i_global" checked="checked" /><abbr title="/g: whether the regexp should return after the 1st match, or search further"><u>G</u>lobal</abbr></label>
+            <label accesskey="s"><input type="checkbox" id="i_singleline" title="currently works only with Mozilla" /><abbr title="/s: whether . should match newlines as well"><u>S</u>ingle</abbr></label>
+
+            <label accesskey="m"><input type="checkbox" id="i_multiline" title="currently works only with Mozilla" /><abbr title="/m: whether ^ and $ should match multiple times"><u>M</u>ulti</abbr></label>
+            <label accesskey="i"><input type="checkbox" id="i_insensitive" checked="checked" /><abbr title="/i: case-in/sensitive matching"><u>I</u>gnore case</abbr></label>
+            <label accesskey="x"><input type="checkbox" id="i_extended" /><abbr title="/x: eXtended expressions (e.g. with comments)">e<u>X</u>tended</abbr></label>
+            <label accesskey="p"><input type="checkbox" id="i_split" /><abbr title="split the target text by the given regexp">S<u>p</u>lit</abbr></label>
+
+            <label accesskey="r"><input type="checkbox" id="i_replace" /><abbr title="replace the matched text with the given expression"><u>R</u>eplace</abbr></label>
+            <label accesskey="c"><input type="checkbox" id="i_compact" /><abbr title="toggle compact mode"><u>C</u>ompact</abbr></label>
+            <label accesskey="h"><input type="checkbox" id="i_miniref" /><abbr title="show the quick regexp reference"><u>H</u>elp</abbr></label>
+            <br/>
+        </div>
+    </fieldset>
+
+    <fieldset id="fs_results">
+        <legend id="l_results"><span id="o_num_results">0</span>&nbsp;<span id="o_results_desc"></span></legend>
+        <div id="o_result_block">
+            <ul id="o_result_matched" class="shown">
+            </ul>
+            <span id="o_result_replaced" class="hidden"></span>
+        </div>
+    </fieldset>
+
+    <fieldset id="fs_target">
+        <legend id="l_target"><u>T</u>arget&nbsp(<span id="o_target_len">0</span>&nbsp;chars)</legend>
+        <div id="o_target_block">
+            <textarea id="i_target" class="shown" rows="5" accesskey="t" wrap="off">The quick
+brown<br>\n
+
+fox jumps
+
+over
+the
+lazy
+dog.
+0123456789.:,;(*!?')
+/\"$%&+-_#
+</textarea>
+            <div id="o_target" class="hidden">
+
+            </div>
+        </div>
+        <div id="target_opt">
+            <label accesskey="v"><input type="checkbox" id="i_evaltarget" /><abbr title="replace special chars such as \r, \n before matching">E<u>v</u>al target text</abbr></label>
+            <label><input type="checkbox" id="i_escaperesults" disabled="disabled" /><abbr title="whether the matched results should be escaped after the matching">Escape matched texts</abbr></label>
+        </div>
+    </fieldset>
+
+</form>
+
+<div id="inlinehelp">
+<!--Mini Regular Expressions reference-->
+<pre>
+\d     any decimal digit
+\D     any char that is not a decimal digit
+\s     any whitespace char
+\S     any char that is not a whitespace
+\w     any <em>word</em> char, i.e. [A-Za-z0-9_]
+\W     any <em>non-word</em> char, i.e. [^A-Za-z0-9_]
+\b     word boundary; backspace inside []
+\B     not a word boundary
+\A     start of subject
+       (independent of multiline mode)
+\Z     end of subject or newline at end
+       (independent of multiline mode)
+\z     end of subject
+       (independent of multiline mode)
+\1..n  backreference inside the regexp
+
+[]     char class
+-      range separator in char class
+^      beginning of line; negate inside []
+$      end of line
+()     capturing parentheses
+(?:)   non-capturing parentheses
+|      separator btw. alternatives
+
+*      zero or more time, equals to {0,}
++      one or more time, equals to {1,}
+?      zero or one time, equals to {0,1};
+       non-greedy modifier after *+?{}
+{m,n}  preceding group: min m, max n times
+(?=x)  lookahead (only if followed by x)
+(?!x)  negated lookahead (only if not followed)
+(?&lt;=x) <strike>lookbehind</strike>, not supported by JS
+(?&lt;!x) <strike>negated lookbehind</strike>, not supported by JS
+
+\f     form-feed
+\t     tab
+\v     vertical-tab
+\r     carriage return
+\n     new line (unix:\n, win:\r\n, mac:\r)
+
+\xhh   hexadecimal code of char (2 hex)
+\uhhhh unicode code of char (4 hex)
+
+
+<a href="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:RegExp#Special_characters_in_regular_expressions" target="_blank">Complete reference</a>
+</pre>
+</div>
+
+<div id="pagefooter">
+<script  type="text/javascript">if(!is_gecko) document.write('<div id="me" style="display:none;">');</script>
+<a href="http://www.cuneytyilmaz.com/prog/jrx/" target="_blank"><img
+alt="Cüneyt Yilmaz (you need an RFC2397 compatible browser,
+like Mozilla to view this ;)"
+title="Cüneyt Yilmaz (you need an RFC2397 compatible browser, like Mozilla to view this ;)"
+align="left" width="39" height="50" border="0" hspace="5" src="data:image/gif;base64,
+R0lGODlhJwAyAPcAAB4uIyQqMR48KyE8My4zMis9MTUxQj82QCFCOSlFQDRFNDdEQTJTMzNS
+PTVQRDZbRktEMURMNkU+Rk9ERUdWMkhTQERcQUdoR15GMWJHQlRWOWBaOlxnQFl2QW51O412
+N0dOU1NOVmBPVl5YZENmUkhpXVpsUlxrYm5QVXFYWm5rVG1iaHpgXIpoXXtpb4hocGZ5X354
+cG6OV3SPb5V3bYx1e5CGbY+gZnt+iJF8gZp+gpqGhY2MiJGfg4mWn5ydmbx3Qb19dqehYcS1
+aqWGhraFhKmQiKqmh6iKlKeUlq+Wkb2Sjq2clKytkcCgksi6ka+Wn7Geo62npK+lr7ucpLWt
+nL2lnMujobauo723orOxsb21rcaxpNatqsXEp+HbpaWtva25vcGttb21ucayus61tcq9tcbK
+tam1xrO5yL+1yMq2xLvBzMbGxrzC07/Q5M7Buc7Bxc7GztvBvtbGzs/M1tbOztzQ1dPY2+rq
+wdLY6ebc4tne8Njs+Ofn8+r0/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAAAAJwAyAEAI/gAjUKhQgQIFBQogYMCgQYMN
+IUKAeNiAgQIGCBAaatiw8QMQIEOGCJnxg8eFAgscXIABxo0bNTDHjBEjZsyamzfl3Nnjp+ef
+P3rSfBkqcsgNEg9kkMSypUyZLWLISKVZc+YULVrGqJFTB8+dr3batMERQYUNIhZoBLlixYwZ
+LlGSENGhY0cSKlSskJFDp4yYKYCniFkTBw+ePXeCFOlSBEMCBw5gOK1ixckSJ0aI7NiRY8UK
+ESNWjHDhIoeLESFeWMGCxQwLFTAeKBDwIEEAAQMGFBgQo8qRI0yMCK+rw8UKFzVyxODBnEmV
+OTwadJABw4QJCwgQJEhQQLuPPnrc/kSxokSJkR00WKTIMEFEaSJIoGBx0+cPmwcPGlhoYEJD
+hgwbBKhRBDy4lEYaMK3RRld66MEHH3/4IYUNKkSwAQcffCAEHmGsYJ0MN+AAhhxyxEGGU36x
+xhpgUUzBGhlx2LFTT3y4ocUXPYj0wQ03KOWcGUm4EEMONbywXgYsEBEXC/9lIIIIKbCwmRZ7
+4GEGVHskocAFFhhRxBJZcAFHHCaKQQURRHBhhZdE5PCCDklwhkQUNLkFhx1z7MGFAgTg10AD
+BRSgQG9VMLEDCzmMpwQRNXi2Qg1JsGZEXUb4phQJF3BZmwO5DUDAAAmcYIYVO4QAQggTSHAA
+AQQEEAAB/gccIAEIK0RRBh0/WGABBybAQAKmJlQQQUPDMqRBBBWc8EMab7zR4IN1jPEbDBh6
+9BFIQtzQgxskLLBABRZQsIEKabwEkxoy2UQYiXU4yIcfP+nBwwxf3GCCCh500MEJD5AwQxM+
+pCFHGzdNRVO66cK4E0/w+qEHGnl8kccTR8xAQgknlMDDGG5dyQUXUGEhGFU1kbEuXwvjUUcY
+HHigggkxDOVFDz9UAfIYPuCAg2jHxYAEEjUYF4IEBkgQwggiHjawFBdm2MERYsS1xahGMPmk
+CCikQIMTa9BhhQsooMACCy/kkEOad/hxRxdXXBEEBzLI4EQRNHBhBk4z0RQF/hRWmLjGTmIo
+MYVWXHlFhx17LBFEFzBcoJ8JXZRRhc1qkkeDDkws2qhnLsyZhGk0KJnF1DLaEQEAAHTnAH4K
+wECZE1bUkEIKYr9gu+01IEEFFDGIEEINzmXRwwXX9furA4CmLqgNTRxhRHnlZabDC8jlsIMR
+UWARhRFMCH8BCb46sJ8CBQhgfqAFnMBFFUZ8lsJnEkjgu6pGg0DrD1vYEd0DFlxMvAMJyE2g
+FpCAN6RBTecRQfxidQADOLBoI8gBEtoShz7MwAT5acBKLBCsChArAgsxVst4xRwcnCAELZsI
+B1SQIWsN4QsiodlGFsIRjDQEAyOYwhtc4hJnuasP/n2oQwwytAEPfGADGfLAD5bTrWFtwIMa
+4MAU3MAGNaRBJiZbA1e68iB4/aEOOaiACW7gAZfd4Ac9sIACvvXEE6DBXOiSSU1uQqY4yAEP
+XYQXeHrwhSeIpEcdKIEDfiUDEVERJmTIW1VwQpg6zMgnNdpCHiYpsR6UoAQm6MEMwMCGEq3B
+DFIhA8lGCSMZMcwPfGDDGb5whBvwygQzKMEFcDAGMoHyY2qiAhbEoIXAaKFOcTjcjPhQBync
+4Dc9kAEJBjkDHkytDB7bgigPJsc52pEvwryDytJwgnGpIAtN6MENSGKzMiRyDL1kUYumAIUk
+IEFnOPCBPN2AmLC04Qca/ihjC5rAT5rZDAs7GwEIJhAr+UkwB+uZAJKC5pkYqGEPdpCDFqK4
+EQ8opQc/ihMRaJACgiqUBUsYjA5EMAFUxW8CKNDBFg4Thzm4LQgF6IBaYGcGOFhhLjSgQQvG
+VgMlWKFrcDBUkV4AKTHAgQ4Lm0MZuvC2DghhLUtwyzSjQFXA5EUqf7sDHA4Whzp4VUZ3sEMQ
+FreDDcigA4orQhZqasc1iHIKRKCCGPwi1zLcgQo6gMIU9sKXMd1hCUuYQ0EY0IAYXGEJVXiC
+GcrwMSoYgQZKKEILWpCe9+UACkALHROYsoUx5WkHBQgAlxogBcZWwQmoxYwOlBAX0xxtBEiT
+/icORpACHVRhC63hwhx64ADUCaAADyjBDJxwhNetKQbIcUGUlosCKJF0AiBwQfCqwCUAPuAC
+q/sToBTQhNPGjkk6wAtmdZADOMk1CjWQUqWyAIPY7Cc/v/qT+QSwgCY4YVGrtQJ5iPCC5qbg
+BURgghWioITrVeEH7S0BUjCFPAQA4LfdiUHzlHBf4QgnTnBKwoWTwIQkVAEOPLguCazTgQY4
+GHW5wQ0MwGkEGwipM7MbwdVCcJwVxKB7+muA8fhnAe50KlChMgMWchCCEDy3gbF6oAEOAIIR
+OHO3moLl8TiVG+0kwAdvYUIM4he/JTuQAA5UVQhy0BY66ME6kOkfTgy6k53sJKAEfXiDFqyQ
+uR0YaQKpQjKNrbdZM9ThDz4gwX72c4HtGLoEPngDeN6ABihkrjwbpYELWOACSiUhCmzgAxD/
+IEgFWKADFwgIAAA7"/></a>
+<script type="text/javascript">if(!is_gecko) document.write('</div>\n');</script>
+
+<address>
+<p>Author: <span lang="tr">C&uuml;neyt Y&#305;lmaz</span><br/>
+
+<a href="http://www.cuneytyilmaz.com/prog/jrx/" title="go to JRX home page" target="_blank">cuneytyilmaz.com</a><br/>
+Suggestions, complaints or just wanna say hello? <script type="text/javascript">EmailDecryptor.dumpEmail()</script></p>
+</address>
+<p>Distributed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank" title="for details see GNU License">GNU License</a>.<br/>
+Modifications are allowed as long as credits are preserved and visible!<br/>
+<em>This is <strong>not</strong> an AJAX application, you can save the page locally and use it off-line.</em></p>
+
+</div>
+
+<div id="result_tooltip"></div>
+
+<a name id="helpme" accesskey="q"></a>
+
+<p class="noStyles">Your browser doesn't support CSS, please upgrade!</p>
+
+</body>
+</html>

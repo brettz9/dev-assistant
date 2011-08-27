@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<overlay id="extensiondevCommonOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ <keyset id="extdevCommonKeyset">
+  <key id="extdev_closeWindow"
+       key="w"
+       oncommand="window.close();"
+       modifiers="accel"/>
+ </keyset>
+</overlay>

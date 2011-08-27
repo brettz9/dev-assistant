@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xul-overlay href="chrome://extensiondev/content/commonOverlay.xul"?>
+
+<!DOCTYPE window SYSTEM "chrome://extensiondev/locale/extensiondev.dtd">
+
+<window id="extensionbuilder"
+        title="Extension Builder"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        width="&default.window.width;"
+        height="&default.window.height;"
+        persist="width height screenX screenY">
+
+  <keyset id="extdevCommonKeyset"/>
+
+  <script type="application/x-javascript" src="chrome://extensiondev/content/extensionbuilder.js"/>
+
+  <html:style>
+    #extra-files {
+      border: 2px solid;
+      margin: 2px 4px;
+      -moz-border-top-colors: ThreeDShadow ThreeDDarkShadow;
+      -moz-border-right-colors: ThreeDHighlight ThreeDLightShadow;
+      -moz-border-bottom-colors: ThreeDHighlight ThreeDLightShadow;
+      -moz-border-left-colors: ThreeDShadow ThreeDDarkShadow;
+      background-color: -moz-Field;
+      color: -moz-FieldText;
+      overflow: auto;
+    }
+  </html:style>
+
+  <hbox>
+    <label value="Working Directory:" control="workingdir"/>
+    <menulist id="workingdir" oncommand="UI.dirSelectionChanged()" crop="start" flex="1">
+    <menupopup>
+    </menupopup>
+    </menulist>
+    <button id="browse-workingdir" label="Browse..." oncommand="ButtonActions.browseForExtension()"/>
+  </hbox>
+
+  <grid>
+    <columns>
+      <column/>
+      <column/>
+    </columns>
+    <rows>
+      <row>
+        <button id="edit-install" label="Edit install.rdf" disabled="true" oncommand="ButtonActions.editInstallManifest()"/>
+        <button id="build" label="Build extension" disabled="true" oncommand="ButtonActions.buildPackage()"/>
+        <button id="working-dir" label="Show Working directory" oncommand="ButtonActions.showWorkingDir()"/>
+      </row>
+      <row>
+        <button id="install-dev" label="Install For Development" disabled="true" oncommand="ButtonActions.installDevChrome()"/>
+        <button id="uninstall-dev" label="Remove Development Install" disabled="true" oncommand="ButtonActions.unInstallDevChrome()"/>
+        <button id="installed-dir" label="Show Installed directory" oncommand="ButtonActions.showInstalledDir()"/>
+      </row>
+      <row>
+        <label value="XPI Filename:"/>
+        <textbox id="xpi-filename"/>
+      </row>
+    </rows>
+  </grid>
+
+  <label value="Extra files to add to root of XPI:"/>
+  <vbox id="extra-files" flex="1"/>
+
+  <statusbar>
+    <statusbarpanel id="status" label="Initializing..." flex="1"/>
+  </statusbar>
+
+</window>
