@@ -1,5 +1,5 @@
-
 var RDFHistory = {}, Basics = {};
+var module = Components.utils['import'];
 module('resource://extensiondev/RDFHistory.js', RDFHistory);
 module('resource://extensiondev/BasicLanguageUtils.js', Basics);
 

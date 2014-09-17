@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>{75739dec-72db-4020-aa9a-6afa6744759b}</em:id>
     <em:name>Developer Assistant</em:name>
-    <em:version>0.3.0.20110827</em:version>
+    <em:version>0.3.0.20110927</em:version>
     <em:creator>Ted Mielczarek</em:creator>
     <em:contributor>Jesse Ruderman</em:contributor>
     <em:contributor>Cüneyt Yilmaz</em:contributor>
