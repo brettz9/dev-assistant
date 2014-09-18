@@ -54,6 +54,43 @@ function init()
   refocus();
 }
 
+function runE10s(code) {
+  code = code.replace("'", "\\'", "g");
+  _scope.__specialE10sScope__.messageManager.loadFrameScript(
+    "data:,___lastRes___=null; \n" +
+    "try { println(eval('with(this){" + code + "}'), 'answer');\n" +
+    "} catch (e) { " +
+    "println(e, 'error');}", false, true);
+  setTimeout(Shell.refocus, 0);
+}
+
+function setUpE10sScopeForBrowser(browser) {
+  println("Scope is now an anonymous framescript for " + browser.currentURI.spec + ".", "message");
+  browser.messageManager.addMessageListener("_JSShell:Reply_", E10SListener);
+  browser.messageManager.loadFrameScript("data:,function println(s, type) { sendAsyncMessage('_JSShell:Reply_', {type: type, text: '' + s}); } function print(s) { println(s, 'print'); }", false, true);
+}
+
+var E10SListener = {
+  receiveMessage: function(msg) {
+    if (msg.target == _scope.__specialE10sScope__) {
+      switch (msg.data.type) {
+        case "print":
+          print(msg.data.text);
+          break;
+
+        case "answer":
+          if (msg.data.text != "undefined") {
+            printAnswer(msg.data.text);
+          }
+          break;
+
+        case "error":
+          println(msg.data.text, "error");
+      }
+    }
+  }
+};
+
 /**
  * Runs |code| in |_win|'s context.
  * @param overridenJSVer {int} (optional) overrides the default (specified by _jsVer)
@@ -324,6 +361,11 @@ scope : function scope(sc)
 {
   if (!sc) sc = {};
   _scope = sc;
+
+  if (sc.__specialE10sScope__) {
+    setUpE10sScopeForBrowser(sc.__specialE10sScope__);
+    return;
+  }
   println("Scope is now " + sc + ".  If a variable is not found in this scope, window will also be searched.  New variables will still go on window.", "message");
 },
 
@@ -724,6 +766,10 @@ function go(s)
   if (!("Shell" in _win))
     initTarget(); // silent
 
+  if (Shell._scope.__specialE10sScope__ && !/^scope\(|^enumerateWindows\(/.test(Shell.question)) {
+    runE10s(Shell.question);
+    return;
+  }
   // Evaluate Shell.question using _win's eval (this is why eval isn't in the |with|, IIRC).
   run(_win, "try{ Shell.printAnswer(eval('with(Shell._scope) with(Shell.shellCommands) {' + Shell.question + String.fromCharCode(10) + '}')); } catch(er) { Shell.printError(er); }; setTimeout(Shell.refocus, 0);");
 }
@@ -751,6 +797,8 @@ function go(s)
 
   .input { color: blue; background: white; font: inherit; font-weight: bold; margin-top: .5em; /* background: #E6E6FF; */ }
   .normalOutput { color: black; background: white; }
+  .e10sScope { font-style: italic; }
+  .e10sScope::after { content: " [remote]";}
   .print { color: brown; background: white; }
   .error { color: red; background: white; }
   .propList { color: green; background: white; }
