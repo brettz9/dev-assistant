@@ -3,7 +3,7 @@ var extDevExt = {};
 window.addEventListener("load", function() {
 
   // prefs for debugging.  true should mean enabled.
-  var debuggingPrefs = ["nglayout.debug.disable_xul_cache", "javascript.options.showInConsole", "browser.dom.window.dump.enabled"];
+  var debuggingPrefs = ["javascript.options.showInConsole", "nglayout.debug.disable_xul_cache", "browser.dom.window.dump.enabled", "javascript.options.strict", "devtools.chrome.enabled", "devtools.debugger.remote-enabled", "extensions.logging.enabled", "nglayout.debug.disable_xul_fastload", "dom.report_all_js_exceptions", "devtools.errorconsole.deprecation_warnings"];
   
   /*
    * Open this tool in a new window (uses a little xul file to work
