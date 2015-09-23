@@ -61,7 +61,7 @@ shellCommands.enumerateWindows = function enumerateWindows(search) {
         var w = en.getNext();
         if (w.document.getElementById('content') && w.document.getElementById('content').tagName == 'tabbrowser') {
             var b = w.document.getElementById('content');
-            var ntabs = b.mPanelContainer.childNodes.length;
+            var ntabs = b.browsers.length;
             for(var i=0; i<ntabs; i++) {
                 var tb = b.getBrowserAtIndex(i);
                 printWindowLink(tb.contentWindow);
