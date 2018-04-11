@@ -1,0 +1,46 @@
+{
+  "name": "dev-assistant",
+  "version": "1.0.0",
+  "description": "Web Developer tools",
+  "main": "install.js",
+  "scripts": {
+    "eslint": "eslint .",
+    "start": "static",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brettz9/dev-assistant.git"
+  },
+  "keywords": [
+    "web",
+    "tool"
+  ],
+  "author": "Brett Zamir",
+  "contributors": [
+    "Ted Mielczarek",
+    "Jesse Ruderman",
+    "Cüneyt Yilmaz",
+    "Tony Chang",
+    "Gavin Sharp",
+    "Cesar Oliveira",
+    "Nickolay Ponomarev"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "4.19.1",
+    "eslint-config-standard": "11.0.0",
+    "eslint-plugin-compat": "2.2.0",
+    "eslint-plugin-import": "2.10.0",
+    "eslint-plugin-node": "6.0.1",
+    "eslint-plugin-promise": "3.7.0",
+    "eslint-plugin-standard": "3.0.1",
+    "node-static": "^0.7.10"
+  },
+  "engines": {},
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brettz9/dev-assistant/issues"
+  },
+  "homepage": "https://github.com/brettz9/dev-assistant#readme"
+}

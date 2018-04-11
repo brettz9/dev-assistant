@@ -1,0 +1,28 @@
+{
+  "extends": "standard",
+  "parserOptions": {
+      "sourceType": "module"
+  },
+  "plugins": ["compat"],
+  "settings": {
+    "targets": [
+        "chrome", "firefox", "edge", "safari", "ios_saf", "android",
+        "opera", "ie", "op_mini", "bb", "op_mob", "and_chr",
+        "and_ff", "ie_mob", "and_uc", "samsung"
+    ],
+    "polyfills": [],
+    "coverage": true
+  },
+  "env": {
+      "node": false,
+      "browser": true
+  },
+  "rules": {
+    "semi": [2, "always"],
+    "indent": ["error", 4, {"outerIIFEBody": 0}],
+    "object-property-newline": 0,
+    "one-var": 0,
+    "no-var": 2,
+    "prefer-const": 2
+  }
+}

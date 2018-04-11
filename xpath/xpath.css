@@ -1,0 +1,23 @@
+#xpathtester {
+    display: flex;
+    flex-direction: row; /* column; */
+}
+.stack {
+    display: flex;
+    flex-direction: column;
+}
+
+#in.error, #expr.error {
+  color: red;
+}
+
+#out {
+  border: 2px inset #000;
+}
+#out {
+    height: 100%;
+}
+#in, #out-stack {
+    width: 50%;
+    height: 600px;
+}

@@ -1,0 +1,11 @@
+# Still migrating
+chrome
+content
+locale
+modules
+skin
+install.js
+common/loadsaveutils.js
+
+# Other
+node_modules
