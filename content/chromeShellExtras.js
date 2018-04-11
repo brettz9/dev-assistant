@@ -1,5 +1,5 @@
-
 var RDFHistory = {}, Basics = {};
+var module = Components.utils['import'];
 module('resource://extensiondev/RDFHistory.js', RDFHistory);
 module('resource://extensiondev/BasicLanguageUtils.js', Basics);
 
@@ -48,13 +48,30 @@ shellCommands.enumerateWindows = function enumerateWindows(search) {
 
     var n = 0;
     Shell.enumWins = [];
-    function printWindowLink (win) {
-        if (search && win.location.href.match(search) == null) {
+    function printScopeLink (obj) {
+        var isWindow = obj instanceof Window;
+        var url = isWindow ? obj.location.href : obj.currentURI.spec;
+        if (search && url.match(search) == null) {
             return; // doesn't match the specified search string.
         }
-        Shell.enumWins[n] = win;
-        printDoScope(win.location.href,'Shell.enumWins[' + n + ']');
+
+        if (isWindow) {
+            // Top-level window object
+            Shell.enumWins[n] = obj;
+        } else if (obj.isRemoteBrowser) {
+            // <xul:browser> object which will get special treatment
+            Shell.enumWins[n] = { __specialE10sScope__: obj };
+        } else {
+            // direct content window
+            Shell.enumWins[n] = obj.contentWindow;
+        }
+
+        var newdiv = printDoScope(url, 'Shell.enumWins[' + n + ']');
         n++;
+
+        if (!isWindow && obj.isRemoteBrowser) {
+            newdiv.classList.add("e10sScope");
+        }
     }
 
     while (en.hasMoreElements()) {
@@ -64,10 +81,10 @@ shellCommands.enumerateWindows = function enumerateWindows(search) {
             var ntabs = b.mPanelContainer.childNodes.length;
             for(var i=0; i<ntabs; i++) {
                 var tb = b.getBrowserAtIndex(i);
-                printWindowLink(tb.contentWindow);
+                printScopeLink(tb);
             }
         }
-        printWindowLink(w);
+        printScopeLink(w);
     }
 };
 
