@@ -1,4 +1,4 @@
-
+/* globals histList */
 var RDFHistory = {}, Basics = {};
 module('resource://extensiondev/RDFHistory.js', RDFHistory);
 module('resource://extensiondev/BasicLanguageUtils.js', Basics);
@@ -18,7 +18,7 @@ var chromeShellExtras = {
                                     .getService(Components.interfaces.nsIXULAppInfo)
                                     .ID == THUNDERBIRD_ID;
         }
-        
+
         if (arguments.callee._needsContentLinkFixing) {
             var match = a.href.match(/^javascript:(.*)$/);
             if(match) {

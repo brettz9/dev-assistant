@@ -614,7 +614,7 @@ var ButtonActions = {
         var f = UI.getWorkingDirectory();
         if (f) {
             f.append('install.rdf');
-            var w = window.openDialog('chrome://extensiondev/content/install-edit.xul', 'installedit',
+            /* var w = */ window.openDialog('chrome://extensiondev/content/install-edit.xul', 'installedit',
                                                                     "all=no,dialog=yes,scrollbars=yes,resizable=yes", f.path);
         }
     },

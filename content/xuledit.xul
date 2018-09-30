@@ -19,7 +19,7 @@
 
   <vbox flex="1">
     <textbox id="ta" multiline="true" wrap="true" flex="1" onkeydown="resetTimeout()" persist="height"
-             value='&lt;?xml-stylesheet href="chrome://global/skin/" type="text/css"?&gt;&#x0A;&lt;window id="yourwindow" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:h="http://www.w3.org/1999/xhtml"&gt;&#x0A;&lt;label id="yx" value="&xuledit.yourXUL;"/&gt;&#x0A;&lt;script type="text/javascript"&gt;&#x0A;&lt;![CDATA[&#x0A;// put some js code here&#x0A;&#x0A;]]&gt;&#x0A;&lt;/script&gt;&#x0A;&lt;/window&gt;'/>
+             value='&lt;?xml-stylesheet href="chrome://global/skin/" type="text/css"?&gt;&#x0A;&lt;window id="yourwindow" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:h="http://www.w3.org/1999/xhtml"&gt;&#x0A;&lt;label id="yx" value="&xuledit.yourXUL;"/&gt;&#x0A;&lt;script&gt;&#x0A;&lt;![CDATA[&#x0A;// put some js code here&#x0A;&#x0A;]]&gt;&#x0A;&lt;/script&gt;&#x0A;&lt;/window&gt;'/>
 
     <splitter id="split"/>
 

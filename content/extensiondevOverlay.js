@@ -4,16 +4,16 @@ window.addEventListener("load", function() {
 
   // prefs for debugging.  true should mean enabled.
   var debuggingPrefs = ["javascript.options.showInConsole", "nglayout.debug.disable_xul_cache", "browser.dom.window.dump.enabled", "javascript.options.strict", "devtools.chrome.enabled", "devtools.debugger.remote-enabled", "extensions.logging.enabled", "nglayout.debug.disable_xul_fastload", "dom.report_all_js_exceptions", "devtools.errorconsole.deprecation_warnings"];
-  
+
   /*
    * Open this tool in a new window (uses a little xul file to work
    * with Thunderbird)
    */
   function doOpenTool_newWin(url)
   {
-    var w = window.openDialog(url, "_blank", "all=no,scrollbars=yes,resizable=yes,dialog=no");
+    /* var w = */ window.openDialog(url, "_blank", "all=no,scrollbars=yes,resizable=yes,dialog=no");
   }
-  
+
   /*
    * Open this tool in a new tab
    */
@@ -22,7 +22,7 @@ window.addEventListener("load", function() {
     var br = getBrowser();
     br.selectedTab = br.addTab(url);
   }
-  
+
   /*
    * Open one of the tools.  The click modifiers determine whether
    * to use current window, new tab, or new window.
@@ -41,17 +41,17 @@ window.addEventListener("load", function() {
       doOpenTool_newWin(url);
     }
   }
-  
+
   function doLoadExtensionBuilder(url)
   {
     doOpenTool_newWin(url);
   }
-  
+
   function doLoadJSInjector(url)
   {
     window.openDialog(url, "_blank", "all=no,scrollbars=no,resizable=yes,dialog=no");
   }
-  
+
   function doToggleExtensionDevPrefs(menuitem)
   {
     var chk = menuitem.getAttribute("checked");
@@ -60,17 +60,17 @@ window.addEventListener("load", function() {
     else
      doSetDebuggingPrefs(true);
   }
-  
+
   function doSetDebuggingPrefs(v)
   {
     try {
       var mPrefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
       for(var i=0; i<debuggingPrefs.length; i++)
-	mPrefs.setBoolPref(debuggingPrefs[i], v);    
+	mPrefs.setBoolPref(debuggingPrefs[i], v);
     }
     catch(e) {}
   }
-  
+
   function doReloadAllChrome()
   {
     try {
@@ -113,10 +113,10 @@ window.addEventListener("load", function() {
 	rv = rv || mPrefs.getBoolPref(debuggingPrefs[i]);
     }
     catch(e){}
-  
+
     doSetDebuggingPrefs(rv);
     document.getElementById("extensiondev_toggleprefs").setAttribute("checked", rv);
-  
+
     // dump js console errors to stdout
     /*FIXME: This appears to be buggy.
     var consoleObserver = {

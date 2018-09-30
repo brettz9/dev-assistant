@@ -9,7 +9,7 @@ function update()
 {
   if(top.dynamicframe) {
     var textarea = document.f.ta;
-    var d = top.dynamicframe.document; 
+    var d = top.dynamicframe.document;
 
     if (old != textarea.value)
     {
@@ -39,7 +39,7 @@ html,body { overflow: hidden; }
 <body class="expand close" onload="update(); document.f.ta.select();">
 <form class="expand close" name="f">
 <textarea class="expand close" style="background-color: #def" name="ta" wrap="hard" spellcheck="false"
->&lt;style type="text/css"&gt;
+>&lt;style&gt;
 /* Test CSS for the page here */
 
 &lt;/style&gt;
@@ -47,7 +47,7 @@ html,body { overflow: hidden; }
 &lt;h3 id="hd"&gt;Welcome to the real-time HTML editor!&lt;/h3&gt;
 &lt;p&gt;Type HTML in the textarea above, and it will magically appear in the frame below.&lt;/p&gt;
 
-&lt;script type="text/javascript"&gt;
+&lt;script&gt;
 // Try out JavaScript here
 
 &lt;/script&gt;

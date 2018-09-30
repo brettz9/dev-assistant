@@ -128,12 +128,13 @@ function loadHistoryItems (seqpropname, seqitemname) {
 function saveSingleItem (shortname, value) {
     getRDFService();
     var ios = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-    var ds = getExtensionDevRDFFileDS(ios);
-    var res = gRDF.GetResource(ED_NS(shortname));
-    var prop = gRDF.GetResource(ED_NS("saveddata"));
+    /* var ds = */ getExtensionDevRDFFileDS(ios);
+    /* var res = */ gRDF.GetResource(ED_NS(shortname));
+    /* var prop = */ gRDF.GetResource(ED_NS("saveddata"));
     value = gRDF.GetLiteral(value.toString());
     //TODO: unassert previous value
     //ds.Assert(res, prop, value, true);
+    console.log(value);
 }
 
 function loadSingleItem (shortname) {

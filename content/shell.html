@@ -5,11 +5,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>JavaScript Shell 1.4</title>
 
-<script type="text/javascript">
-var 
-  histList = [""], 
-  histPos = 0, 
-  _scope = {}, 
+<script>
+var
+  histList = [""],
+  histPos = 0,
+  _scope = {},
   _win, // a top-level context
   question, // {String} the input command that's being evaluated. Accessed via
             // |Shell.question| from the target window for evaluation.
@@ -67,7 +67,7 @@ function run(_win, code, overridenJSVer) {
     var sc = _win.document.createElement("script");
     sc.type="application/javascript;version=" + jsVerToUse/10;
     sc.src="data:application/x-javascript," + code;
-    _win.document.body.appendChild(sc); // runs the script asynchronously    
+    _win.document.body.appendChild(sc); // runs the script asynchronously
   }
 }
 
@@ -80,16 +80,16 @@ function initTarget()
 
 // Unless the user is selected something, refocus the textbox.
 // (requested by caillon, brendan, asa)
-function keepFocusInTextbox(e) 
+function keepFocusInTextbox(e)
 {
   var g = e.srcElement ? e.srcElement : e.target; // IE vs. standard
-  
+
   while (!g.tagName)
     g = g.parentNode;
   var t = g.tagName.toUpperCase();
   if (t=="A" || t=="INPUT")
     return;
-    
+
   if (window.getSelection) {
     // Mozilla
     if (String(window.getSelection()))
@@ -100,7 +100,7 @@ function keepFocusInTextbox(e)
     if ( document.selection.createRange().text )
       return;
   }
-  
+
   refocus();
 }
 
@@ -129,7 +129,7 @@ function inputKeydown(e) {
   } else { }
 
   setTimeout(recalculateInputHeight, 0);
-  
+
   //return true;
 };
 
@@ -140,7 +140,7 @@ function caretInFirstLine(textbox)
     return true;
 
   var firstLineBreak = textbox.value.indexOf("\n");
-  
+
   return ((firstLineBreak == -1) || (textbox.selectionStart <= firstLineBreak));
 }
 
@@ -151,7 +151,7 @@ function caretInLastLine(textbox)
     return true;
 
   var lastLineBreak = textbox.value.lastIndexOf("\n");
-  
+
   return (textbox.selectionEnd > lastLineBreak);
 }
 
@@ -160,7 +160,7 @@ function recalculateInputHeight()
   var rows = _in.value.split(/\n/).length
     + 1 // prevent scrollbar flickering in Mozilla
     + (window.opera ? 1 : 0); // leave room for scrollbar in Opera
-  
+
   if (_in.rows != rows) // without this check, it is impossible to select text in Opera 7.60 or Opera 8.0.
     _in.rows = rows;
 }
@@ -189,7 +189,7 @@ function printWithRunin(h, s, type)
 }
 
 
-var shellCommands = 
+var shellCommands =
 {
 load : function load(url)
 {
@@ -203,7 +203,7 @@ load : function load(url)
 clear : function clear()
 {
   var CHILDREN_TO_PRESERVE = 3;
-  while (_out.childNodes[CHILDREN_TO_PRESERVE]) 
+  while (_out.childNodes[CHILDREN_TO_PRESERVE])
     _out.removeChild(_out.childNodes[CHILDREN_TO_PRESERVE]);
 },
 
@@ -211,8 +211,8 @@ print : function print(s) { println(s, "print"); },
 
 // the normal function, "print", shouldn't return a value
 // (suggested by brendan; later noticed it was a problem when showing others)
-pr : function pr(s) 
-{ 
+pr : function pr(s)
+{
   shellCommands.print(s); // need to specify shellCommands so it doesn't try window.print()!
   return s;
 },
@@ -269,10 +269,10 @@ props : function props(e, onePerLine)
 
   for (j=0; j<protoLevels; ++j)
     for (i=0;i<ns.length;++i)
-      if (as[i][j].length) 
+      if (as[i][j].length)
         printWithRunin(
-          ns[i] + times(" of prototype", j), 
-          (onePerLine ? "\n\n" : "") + as[i][j].sort().join(onePerLine ? "\n" : ", ") + (onePerLine ? "\n\n" : ""), 
+          ns[i] + times(" of prototype", j),
+          (onePerLine ? "\n\n" : "") + as[i][j].sort().join(onePerLine ? "\n" : ", ") + (onePerLine ? "\n\n" : ""),
           "propList"
         );
 },
@@ -284,7 +284,7 @@ blink : function blink(node)
   if (node.nodeType == 3)        throw("blink: argument must not be a text node");
   if (node.documentElement)      throw("blink: argument must not be the document object");
 
-  function setOutline(o) { 
+  function setOutline(o) {
     return function() {
       if (node.style.outline != node.style.bogusProperty) {
         // browser supports outline (Firefox 1.1 and newer, CSS3, Opera 8).
@@ -299,11 +299,11 @@ blink : function blink(node)
         node.style.border = o;
       }
     }
-  } 
-  
+  }
+
   function focusIt(a) {
     return function() {
-      a.focus(); 
+      a.focus();
     }
   }
 
@@ -341,7 +341,7 @@ function hist(up)
 {
   // histList[0] = first command entered, [1] = second, etc.
   // type something, press up --> thing typed is now in "limbo"
-  // (last item in histList) and should be reachable by pressing 
+  // (last item in histList) and should be reachable by pressing
   // down again.
 
   var L = histList.length;
@@ -364,16 +364,16 @@ function hist(up)
       // Set to nothing first for the same reason
       setTimeout(
         function() {
-          _in.value = ''; 
+          _in.value = '';
           _in.value = histList[histPos];
           var caretPos = _in.value.length;
-          if (_in.setSelectionRange) 
+          if (_in.setSelectionRange)
             _in.setSelectionRange(caretPos, caretPos);
         },
         0
       );
     }
-  } 
+  }
   else // down
   {
     if (histPos < L-1)
@@ -434,7 +434,7 @@ function tabcomplete()
 
       if(stopAtDot && s.charAt(i) == '.')
         break;
-        
+
       if(s.charAt(i) == ')')
         nparens++;
       else if(s.charAt(i) == '(')
@@ -465,7 +465,7 @@ function tabcomplete()
   {
     if(inp.selectionEnd != null)
       return inp.selectionEnd;
-      
+
     if(inp.createTextRange)
     {
       var docrange = _win.Shell.document.selection.createRange();
@@ -486,7 +486,7 @@ function tabcomplete()
       inp.selectionStart = inp.selectionEnd = pos;
     }
     else if(inp.createTextRange) {
-      var docrange = _win.Shell.document.selection.createRange();
+      /* var docrange = */ _win.Shell.document.selection.createRange();
       var inprange = inp.createTextRange();
       inprange.move('character',pos);
       inprange.select();
@@ -566,7 +566,7 @@ function tabcomplete()
                 obj = eval(objname);
         }
         catch(er) {
-          printError(er); 
+          printError(er);
           return;
         }
         if(obj == undefined) {
@@ -673,7 +673,7 @@ function printAnswer(a)
 }
 
 function printError(er)
-{ 
+{
   var lineNumberString;
 
   lastError = er; // for debugging the shell
@@ -703,8 +703,8 @@ function go(s)
   histList[histList.length-1] = question;
   histList[histList.length] = "";
   histPos = histList.length - 1;
-  
-  // Unfortunately, this has to happen *before* the JavaScript is run, so that 
+
+  // Unfortunately, this has to happen *before* the JavaScript is run, so that
   // print() output will go in the right place.
   _in.value='';
   recalculateInputHeight();
@@ -714,8 +714,8 @@ function go(s)
     printError("Target window has been closed.");
     return;
   }
-  
-  try { ("Shell" in _win) }
+
+  try { ("Shell" in _win); } // lgtm [js/useless-expression]
   catch(er) {
     printError("The JavaScript Shell cannot access variables in the target window.  The most likely reason is that the target window now has a different page loaded and that page has a different hostname than the original page.");
     return;
@@ -731,9 +731,9 @@ function go(s)
 </script>
 
 <!-- for http://ted.mielczarek.org/code/mozilla/extensiondev/ -->
-<script type="text/javascript" src="chrome://extensiondev/content/chromeShellExtras.js"></script>
+<script src="chrome://extensiondev/content/chromeShellExtras.js"></script>
 
-<style type="text/css">
+<style>
   body { background: white; color: black; }
 
   #output {

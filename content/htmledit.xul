@@ -17,7 +17,7 @@
   <keyset id="extdevCommonKeyset"/>
 
   <script type="application/x-javascript" src="loadsaveutils.js"/>
-  <script type="text/javascript"><![CDATA[
+  <script><![CDATA[
     function onLoad()
     {
       var w = document.getElementById('content').contentWindow.wrappedJSObject;

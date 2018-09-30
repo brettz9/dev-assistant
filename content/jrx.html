@@ -4,7 +4,7 @@ Distributed under GNU Public License!
 For details see: http://www.gnu.org/licenses/gpl.html
 
 Please keep these credits:
-Author : Cüneyt Yilmaz
+Author : CÃ¼neyt Yilmaz
 Contact: please open the page for email info
 
 I assume no responsibility for ANYTHING that you may cause via the use of this program!
@@ -25,13 +25,13 @@ TODO:
 <head>
 <!------------------------------------------------------------------------------------------------->
 <title>JRX: real-time JavaScript RegExp evaluator - cuneytyilmaz.com</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-9">
-<meta name="author" content="Cuneyt Yilmaz, C&uuml;neyt Y&#305;lmaz, cuneytyilmaz.com>">
+<meta charset="utf-8">
+<meta name="author" content="Cuneyt Yilmaz, C&uuml;neyt YÄ±lmaz, cuneytyilmaz.com>">
 <meta name="keywords" content="jrx, javascript, regexp, regex, regular expressions, cuneyt, yilmaz, real time, real-time, on the fly, on-the-fly, rx, activestate, komodo, evaluate, evaluator">
 <meta name="description" content="This is a simple JavaScript real-time regular expression evaluator, similar to RX tool of Activestate's Komodo IDE">
 <meta name="version" content="1.1b16">
 
-<style type="text/css">
+<style>
 <!--
 
 
@@ -195,7 +195,7 @@ label abbr{ border-bottom: 1px dotted; }
 
 <!------------------------------------------------------------------------------------------------->
 
-<script type="text/javascript">
+<script>
 <!--
 // window.onError = _jrxErrorHandler;
 // function _jrxErrorHandler (desc, url, line, char) { return; alert("Caught an unhandled exception\ndesc: (" + desc + ")\nurl: (" + url + ")\nline: (" + line + ")\nchar: (" + char + ")"); return true; }
@@ -540,7 +540,7 @@ var JRX =
                     textindex_arr[item_id_prefix + (iterationcnt - 1)] = new Array(current_match.index, current_match.index + current_match[0].length);
                     if(current_match[0].length == 0)
                         myRe.lastIndex++;
-                    var dummy_arr = new Array()
+                    var dummy_arr = new Array();
                     for(var i = 0; i < current_match.length; i++)
                     {
                         dummy_arr.push(current_match[i]);
@@ -756,10 +756,12 @@ var JRX =
           btw 6 & 9 => 9
           more => 10
         */
+        /*
         var rows = 10;
         if(len-6 <= 3) rows = 9;
         if(len-2 <= 3) rows = 5;
         if(len-1 <= 0) rows = 1;
+        */
 
         // self.status = "len: " + el('i_regexp').value.length + ", cols: " + el('i_regexp').cols + ", mod: " + Math.ceil(el('i_regexp').value.length / el('i_regexp').cols);
         // rows = Math.ceil(el('i_regexp').value.length / el('i_regexp').cols);
@@ -851,7 +853,7 @@ var EmailDecryptor =
         c += ' ';
         var length = c.length;
         var number = 0;
-        var bar = 0;
+        // var bar = 0;
         var answer = '';
         for(var i = 0; i < length; i++)
         {
@@ -986,7 +988,7 @@ var CookieManager =
                         el(cookiename).checked = cookieval == 'true' || cookieval == 'checked' ? 'checked' : '';
                         break;
                     case 'textarea':
-                        var os = ''
+                        var os = '';
                         for(var i = 0; i < cookieval.length; i = i + 2)
                             os = os + String.fromCharCode(this.h2d('0x'+cookieval.substr(i,2)));
                         el(cookiename).value = os;
@@ -1004,7 +1006,7 @@ var Util =
 {
     unHTMLize: function(str)
     {
-        return str ? str.replace(/&/, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : str;
+        return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : str;
     },
 
     makeString: function(ch, times)
@@ -1082,7 +1084,7 @@ var DOM =
 <body lang="en" onLoad="JavaScript:JRX.init();" onUnload="JavaScript:CookieManager.saveSettings();" background="data:image/gif;base64,R0lGODlhAQACALMAAPf39////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAAAAAQACAAAEAzCACAA7">
 
 <div id="pageheader">
-<h1><abbr title="Javascript Regular eXpressions">JRX</abbr>: real-time JavaScript <abbr title="Regular Expression">RegExp</abbr> evaluator <script type="text/javascript">document.write('<span title="'+'Last update: '+(new Date(document.lastModified)).toLocaleString()+'" style="border-bottom: 1px dotted; display: inline;">')</script>v1.1b16<script type="text/javascript">document.write('</span>')</script></h1>
+<h1><abbr title="Javascript Regular eXpressions">JRX</abbr>: real-time JavaScript <abbr title="Regular Expression">RegExp</abbr> evaluator <script>document.write('<span title="'+'Last update: '+(new Date(document.lastModified)).toLocaleString()+'" style="border-bottom: 1px dotted; display: inline;">')</script>v1.1b16<script>document.write('</span>')</script></h1>
 
 <a id="help" title="Program info, a RegExp quick reference &amp; and miscellaneous" accesskey="A"><u>A</u>bout</a><br/>
 <!--<a href="jrx.html">Latest beta!</a>-->
@@ -1413,11 +1415,11 @@ $      end of line
 </div>
 
 <div id="pagefooter">
-<script  type="text/javascript">if(!is_gecko) document.write('<div id="me" style="display:none;">');</script>
+<script>if(!is_gecko) document.write('<div id="me" style="display:none;">');</script>
 <a href="http://www.cuneytyilmaz.com/prog/jrx/" target="_blank"><img
-alt="Cüneyt Yilmaz (you need an RFC2397 compatible browser,
+alt="CÃ¼neyt Yilmaz (you need an RFC2397 compatible browser,
 like Mozilla to view this ;)"
-title="Cüneyt Yilmaz (you need an RFC2397 compatible browser, like Mozilla to view this ;)"
+title="CÃ¼neyt Yilmaz (you need an RFC2397 compatible browser, like Mozilla to view this ;)"
 align="left" width="39" height="50" border="0" hspace="5" src="data:image/gif;base64,
 R0lGODlhJwAyAPcAAB4uIyQqMR48KyE8My4zMis9MTUxQj82QCFCOSlFQDRFNDdEQTJTMzNS
 PTVQRDZbRktEMURMNkU+Rk9ERUdWMkhTQERcQUdoR15GMWJHQlRWOWBaOlxnQFl2QW51O412
@@ -1469,13 +1471,13 @@ GHW5wQ0MwGkEGwipM7MbwdVCcJwVxKB7+muA8fhnAe50KlChMgMWchCCEDy3gbF6oAEOAIIR
 OHO3moLl8TiVG+0kwAdvYUIM4he/JTuQAA5UVQhy0BY66ME6kOkfTgy6k53sJKAEfXiDFqyQ
 uR0YaQKpQjKNrbdZM9ThDz4gwX72c4HtGLoEPngDeN6ABihkrjwbpYELWOACSiUhCmzgAxD/
 IEgFWKADFwgIAAA7"/></a>
-<script type="text/javascript">if(!is_gecko) document.write('</div>\n');</script>
+<script>if(!is_gecko) document.write('</div>\n');</script>
 
 <address>
 <p>Author: <span lang="tr">C&uuml;neyt Y&#305;lmaz</span><br/>
 
 <a href="http://www.cuneytyilmaz.com/prog/jrx/" title="go to JRX home page" target="_blank">cuneytyilmaz.com</a><br/>
-Suggestions, complaints or just wanna say hello? <script type="text/javascript">EmailDecryptor.dumpEmail()</script></p>
+Suggestions, complaints or just wanna say hello? <script>EmailDecryptor.dumpEmail()</script></p>
 </address>
 <p>Distributed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank" title="for details see GNU License">GNU License</a>.<br/>
 Modifications are allowed as long as credits are preserved and visible!<br/>
