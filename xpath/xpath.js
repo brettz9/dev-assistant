@@ -56,7 +56,7 @@ function decorate () {
         {
             acceptNode (node) {
                 if (node.nodeType === Node.TEXT_NODE &&
-                    !(/[^\t\n\r ]/.test(node.nodeValue))) {
+                    !((/[^\t\n\r ]/).test(node.nodeValue))) {
                     return NodeFilter.FILTER_REJECT;
                 }
                 return NodeFilter.FILTER_ACCEPT;
@@ -100,7 +100,7 @@ function addTree (walker, destNode) {
 
             // Insert the output node and recursivly walk the children
             // of every node
-            destNode.appendChild(newNode);
+            destNode.append(newNode);
             addTree(walker, newNode);
         } while (walker.nextSibling());
 

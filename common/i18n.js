@@ -1,6 +1,6 @@
 const availableLanguages = ['en'];
 const lang = navigator.languages.find((language) => {
-    availableLanguages.includes(language);
+    return availableLanguages.includes(language);
 }) || 'en';
 
 let msgsJSON;
