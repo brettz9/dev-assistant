@@ -1,0 +1,476 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+Distributed under GNU Public License!
+For details see: http://www.gnu.org/licenses/gpl.html
+
+Please keep these credits:
+Author : Cüneyt Yilmaz
+Contact: please open the page for email info
+
+I assume no responsibility for ANYTHING that you may cause via the use of this program!
+
+-->
+<!--
+TODO:
+ - change replacement code from str.replace to str.exec->str.replace
+ - update replacement counts
+ - add tooltips to replaced blocks
+ - implement a tabbed-view like in:
+   http://javascript.internet.com/css/tab-view.html
+   http://onlinetools.org/tools/domtabdata/
+   http://jon.hedley.net/html-tabbed-dialog-widget
+-->
+<html>
+
+<head>
+<!------------------------------------------------------------------------------------------------->
+<title>JRX: real-time JavaScript RegExp evaluator - cuneytyilmaz.com</title>
+<meta charset="utf-8">
+<meta name="author" content="Cuneyt Yilmaz, C&uuml;neyt Yılmaz, cuneytyilmaz.com>">
+<meta name="keywords" content="jrx, javascript, regexp, regex, regular expressions, cuneyt, yilmaz, real time, real-time, on the fly, on-the-fly, rx, activestate, komodo, evaluate, evaluator">
+<meta name="description" content="This is a simple JavaScript real-time regular expression evaluator, similar to RX tool of Activestate's Komodo IDE">
+<meta name="version" content="1.1b16">
+
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+<link rel="stylesheet" href="index.css" />
+<!------------------------------------------------------------------------------------------------->
+
+<script src="index.js"></script>
+
+<!------------------------------------------------------------------------------------------------->
+
+
+</head>
+
+<body lang="en" onload="JavaScript:JRX.init();" onunload="JavaScript:CookieManager.saveSettings();" background="data:image/gif;base64,R0lGODlhAQACALMAAPf39////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAAAAAQACAAAEAzCACAA7">
+
+<div id="pageheader">
+<h1><abbr title="Javascript Regular eXpressions">JRX</abbr>: real-time JavaScript <abbr title="Regular Expression">RegExp</abbr> evaluator
+<script>
+document.write(
+    '<span title="' + 'Last update: ' +
+    (new Date(document.lastModified)).toLocaleString() +
+    '" style="border-bottom: 1px dotted; display: inline;">'
+);
+</script>v1.1b16<script>
+document.write('</span>');
+</script>
+</h1>
+
+<a id="help" title="Program info, a RegExp quick reference &amp; and miscellaneous" accesskey="A"><u>A</u>bout</a><br/>
+<!--<a href="jrx.html">Latest beta!</a>-->
+</div>
+
+<div id="help_about">
+
+
+<h3>About</h3>
+
+<p class="notes">JRX is inspired by the RX tool of <a href="http://www.activestate.com/Products/Komodo/" target="_blank" title="Try Komodo as well">ActiveState's Komodo</a> IDE. Although RX is more powerful and supports Perl Regular Expressions (almost?) fully, I've needed an always-accessible and installation-free implementation.<br/>
+
+So, here it is: a single, ultra-compact HTML file, <strong>without</strong> any external file ;)<br/>
+Save it to your disk if you like, or use online for latest version.</p>
+
+<p class="notes">You might also be interested in <a href="http://ted.mielczarek.org/code/mozilla/extensiondev/" target="_blank">Ted Mielczarek's <em>Extension Developer's Extension</em></a>, it includes JRX among some other very useful stuff, it's terrific!</p>
+
+<p class="w"><em>This is <b>not</b> an AJAX application, you can save the page locally and use it off-line.</em></p>
+
+
+<h3>Compatibility</h3>
+
+<p>I'd tested older versions of JRX with Mozilla 1.3, IE 6.0 and Opera 7.1, and JRX worked OK in all of them.<br/>
+However, IE6 and Opera <strike>have</strike> had back then some funny bugs with JavaScript and CSS, and I'm getting tired of IEs inferior CSS/JS-support (I'm not sure of IE7, I don't have it).
+Therefore, I was testing the latest versions only with <a href="http://www.mozilla.org/releases/" target="_blank" title="Use a real browser, use Firefox ;)">Mozilla Firefox</a> &gt;=v1.5; JRX may or may not work in Opera.<br/>
+I'd be happy if you can come up with code submissions which fix things with IE/Opera, but most likely I will not do it myself.<br/>
+
+I'm still keeping <a href="http://www.cuneytyilmaz.com/prog/jrx/jrx.nongecko.html" target="_blank">the latest working version for IE/Opera</a> anyway.<br/>
+Have fun.</p>
+
+
+<h3>Recent changes</h3>
+
+<ul>
+<li>I've added matched substrings' starting and ending positions to the results list</li>
+<li>Clicking or hovering on the results will highlight matched portion on the target text and double-clicking will jump to the textarea; <strike>unfortunately you cannot scroll the textareas to the selected portion :(</strike></li>
+
+<li>Hovering over the results will show the parenthesized substrings</li>
+<li>Target text can be evaluated before the matching is done (see below for explanation)</li>
+<li>RegExp-based replacements; also if you have parenthesized groups, you can use $1, $2, etc. or $&</li>
+<li><strike>I've changed the split code, it now does <strong>not</strong> use String.split(), since String.split() doesn't know about matched portions' positions</strike></li>
+<li>Settings are automatically saved via cookies (yippee!) and your last regexp and text will be preserved; note that cookies will <strong>not</strong> work if you work locally</li>
+
+<li>There's a compact mode now, JRX should easily fit into smallest browser windows (see the note about this option &amp; re-distribution below)</li>
+<li>Number of iterations is hard-limited to 250, in order to avoid infinite evaluations (e.g. due to backtracking)</li>
+<li>Got rid of &quot;Auto-update&quot; option, &quot;Refresh&quot; &amp; &quot;Clear text&quot; buttons</li>
+
+<li>Changed the accesskeys so that most of them can be accessed with the options' first letters</li>
+<li>Fixed a bug with regexps using *, e.g. /b*/ matched against "Hello world" repeatedly the first empty string (pos:0-&gt;0)</li>
+<li>Lots of small changes and some cleanup in code</li>
+<li>Unfortunately, I have no time to implement lots lots of workarounds for IE's bugs, so I will rarely test JRX with IE from now on and write code for IE only if it's extremely easy!</li>
+</ul>
+<p>Unless new bugs are discovered, I'll add no more features to this beta and release it as final.</p>
+
+
+<h3>To do</h3>
+
+<p>I'm considering to add a few other tools and cosmetic changes, such as:</p>
+<ul>
+<li>Regexp examples for common tasks, e.g. matching dates, emails, domain names, etc.</li>
+<li>Perl-style <em>extended</em> regular expressions, i.e. with multiple lines, comments, etc, but it's no top priority at the moment; contact me if you can help on this</li>
+<li>A tabbed interface (why?!?)</li>
+<li>Real-time JavaScript Evaluator(why?!?, there is this awesome <a href="http://www.squarefree.com/shell/" target="_blank">JavaScript Shell</a> and another terrific <a href="http://www.squarefree.com/jsenv/" target="_blank">JavaScript Development Environment</a>)</li>
+
+<li>Hexadecimal&lt;-&gt;Decimal converter</li>
+<li>Encoder-Decoder using un/escape(), de/encodeURI(), de/encodeURIComponent() (I'm letting myself go)</li>
+<li>The subroutine which will compute the answer to life, the universe and everything</li>
+</ul>
+<p>Though these might be useful to do everything on one place, it will also bloat the page, so they might be never implemented.</p>
+
+
+<h3>Mini FAQ</h3>
+
+<p class="q">Q. Why are my results shown twice, if I use global and parentheses?</p>
+
+<p class="a"><strike>A. Results always include $0, which means, if you use, e.g. (^.*$), $0 is implicitly the whole matched string and $1 is your backreference!<br/>
+Now if you pack your whole regexp into parentheses, $0 &amp; $1 will be naturally the same, therefore shown twice:)<br/>
+...try the above regexp with multiline(m) &amp; global(g), and you'll see.</strike><br/>
+Results show only $0 now, hover over the results to see the substrings.</p>
+
+<p class="q">Q. What does "Eval target text" do?</p>
+
+<p class="a">A. It substitutes escaped chars \t \r \n \f \v with their respective values, before matching the regexp!<br/>
+To see this in action enter "foo \t bar" as target text and "(\S+)(\s+)(\S+)" as regexp<br/>
+and try matching with and without this options.<br/>
+Note that the inline linebreaks in the target are <b>not</b> escaped; you should use \n in that case.<br/>
+Also note that the highlighting does not function well when this option is active, yet.</p>
+
+
+<p class="q">Q. Why is text length shown &quot;incorrectly&quot; if use newlines?</p>
+
+<p class="a">A. (Firefox') HTML textareas interpret Enter key as ASCII code 0x0A (aka \n) and &quot;a&lt;ENTERKEY&gt;b&quot; returns a length of 3 whereas other editors show a length of 4 using 0x0D+0x0A (aka \r\n).<br/>
+So be cautious if text length is extremely important for you and/or if you match/split by \n, \s, etc.</p>
+
+
+<p class="q">Q. How can I backreference inside my regexp?</p>
+
+<p class="a">A. For example, to match ISO-type dates (yyyy-mm-dd) you could use (\d{4})([/.-])(\d{2})\2(\d{2}) (this is a practical example, but not validating). Note the <b>\2</b> it ensures that the same delimiter is used afterwards.<br/>
+
+BTW, a complete date-validating regexp is nearly impossible, due to the leap years, but an approximate solution would be:
+<b>(\d{4})([/.-])(0\d|1[0-2])\2([012]\d|3[01])</b>, though this would match 9876-02-30, too, I'll leave the rest as an exercise.</p>
+
+
+
+<h3>Keyboard shortcuts</h3>
+
+<p>You can recognize shortcuts on underlined letters. Firefox used to have ALT as modifier key and later versions use ALT-SHIFT.</p>
+
+<table border="0" cellpadding="2" cellspacing="0" summary="Keyboard shortcuts table">
+	<tr><td>Modifier-<strong>E</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>E</strong>xpression box</td></tr>
+
+	<tr><td>Modifier-<strong>T</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>T</strong>arget text box</td></tr>
+	<tr><td>Modifier-<strong>A</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>A</strong>bout</td></tr>
+	<tr><td>Modifier-<strong>G</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>G</strong>lobal matching</td></tr>
+
+	<tr><td>Modifier-<strong>M</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>M</strong>ulti-line mode</td></tr>
+	<tr><td>Modifier-<strong>S</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>S</strong>ingle-line mode</td></tr>
+	<tr><td>Modifier-<strong>I</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>I</strong>gnore case</td></tr>
+
+	<tr><td>Modifier-<strong>I</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>e<strong>X</strong>tended regexps</td></tr>
+	<tr><td>Modifier-<strong>P</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>s<strong>P</strong>lit mode</td></tr>
+	<tr><td>Modifier-<strong>R</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>R</strong>eplace mode</td></tr>
+
+	<tr><td>Modifier-<strong>C</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td><strong>C</strong>ompact mode</td></tr>
+	<tr><td>Modifier-<strong>H</strong></td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>s<strong>H</strong>ow mini reference</td></tr>
+</table>
+
+<h3>Quick Regular Expressions reference</h3>
+
+<table border="0" cellpadding="2" cellspacing="0" summary="Quick Regular Expressions reference">
+    <tr><td><b>\d     </b></td><td>any decimal digit                                                   </td></tr>
+    <tr><td><b>\D     </b></td><td>any char that is not a decimal digit                                </td></tr>
+    <tr><td><b>\s     </b></td><td>any whitespace char                                                 </td></tr>
+    <tr><td><b>\S     </b></td><td>any char that is not a whitespace                                   </td></tr>
+
+    <tr><td><b>\w     </b></td><td>any <em>word</em> char                                              </td></tr>
+    <tr><td><b>\W     </b></td><td>any <em>non-word</em> char                                          </td></tr>
+    <tr><td><b>\b     </b></td><td>word boundary; inside char-class: backspace                         </td></tr>
+
+    <tr><td><b>\B     </b></td><td>not a word boundary                                                 </td></tr>
+    <tr><td><b>\A     </b></td><td>start of subject (independent of multiline mode)                    </td></tr>
+    <tr><td><b>\Z     </b></td><td>end of subject or newline at end (independent of multiline mode)    </td></tr>
+    <tr><td><b>\z     </b></td><td>end of subject(independent of multiline mode)                       </td></tr>
+    <tr><td><b>[]     </b></td><td>char class                                                          </td></tr>
+
+    <tr><td><b>^      </b></td><td>beginning of line; inside char-class: negate                        </td></tr>
+    <tr><td><b>$      </b></td><td>end of line                                                         </td></tr>
+    <tr><td><b>()     </b></td><td>capturing parentheses                                               </td></tr>
+    <tr><td><b>|      </b></td><td>alternation                                                         </td></tr>
+    <tr><td><b>*      </b></td><td>zero or more time, equals to {0,}                                   </td></tr>
+
+    <tr><td><b>+      </b></td><td>one or more time, equals to {1,}                                    </td></tr>
+    <tr><td><b>?      </b></td><td>zero or one time, equals to {0,1}                                   </td></tr>
+    <tr><td><b>{m,n}  </b></td><td>preceding char or group minimal m, maximal n times                  </td></tr>
+    <tr><td><b>(?:)   </b></td><td>non-capturing parentheses                                           </td></tr>
+    <tr><td><b>(?=x)  </b></td><td>lookahead, i.e. only if followed by x                               </td></tr>
+
+    <tr><td><b>(?!x)  </b></td><td>negated lookahead, i.e. only if not followed by x                   </td></tr>
+    <tr><td><b>(?&lt;x)   </b></td><td><strike>lookbehind</strike>, not supported by JavaScript            </td></tr>
+    <tr><td><b>(?&lt;!x)  </b></td><td><strike>negated lookbehind</strike>, not supported by JavaScript    </td></tr>
+    <tr><td><b>\f     </b></td><td>form-feed                                                           </td></tr>
+
+    <tr><td><b>\t     </b></td><td>tab                                                                 </td></tr>
+    <tr><td><b>\v     </b></td><td>vertical-tab                                                        </td></tr>
+    <tr><td><b>\r     </b></td><td>carriage return                                                     </td></tr>
+    <tr><td><b>\n     </b></td><td>new line (unix:\n, win:\r\n, mac:\r)                            </td></tr>
+    <tr><td><b>\xhh   </b></td><td>hexadecimal code of char (2 hex)                                    </td></tr>
+
+    <tr><td><b>\uhhhh </b></td><td>unicode code of char (4 hex)                                        </td></tr>
+</table>
+
+
+<h3>Copy issues</h3>
+
+<p>Distributed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank" title="for details see GNU License">GNU License</a>.<br/>
+Modifications are allowed as long as credits are preserved and <u>visible</u>,</p>
+
+<p class="w">i.e. you may not re-distribute this page in its compact form, i.e. with page header and footer being hidden!</p>
+
+<p>Email portion of this program courtesy of: <a href="http://www.jracademy.com/~jtucek/" target="_blank">Jim Tucek</a></p>
+
+<p>Other portions of code which are used in this page are fully documented and credited in the source code.</p>
+
+
+<h3>Credits and thanks</h3>
+
+<ul>
+<li>Ted Mielczarek: For including JRX on his awesome <a href="http://ted.mielczarek.org/code/mozilla/extensiondev/" target="_blank">Extension Developer's Extension</a></li>
+
+<li>Steven Levithan: For his awesome <a href="http://stevenlevithan.com/regex/xregexp/" target="_blank">XRegExp library</a>, it adds some amazing features to stock JS capabilities.</li>
+<li>Luciano Espirito Santo: for his feedback about help, usability and that cute smiley :)</li>
+<li>Yann Coupin: for his marvellous idea of splitting feature and his coding (I've replaced it later though)</li>
+<li>Will Moffat: he came up with the great idea adding the eval-target option</li>
+<li>Numerous other people: for all their feedback</li>
+</ul>
+
+</div>
+<p id="pagenews">Finally <strong>/s</strong> & <strong>/x</strong> and named captures, thanks to <a href="http://stevenlevithan.com/regex/xregexp/" target="_blank">XRegExp</a>!</p>
+
+<form name="jrxform" id="jrxform" action="" onsubmit="javascript:return false;">
+    <fieldset id="fs_regexp">
+        <legend id="l_regexp">Reg<u>E</u>xp
+        <!-- TODO: implement-->
+            <select id="i_sample">
+                <option value="dummy">--Samples--</option>
+                <option value="u0">last user expr</option>
+                <option value="dg">/g</option>
+
+                <option value="ds">/s</option>
+                <option value="dm">/m</option>
+                <option value="di">/i</option>
+                <option value="dx">/x</option>
+                <option value="dp">split</option>
+                <option value="dr">replace</option>
+
+                <option value="de">eval</option>
+                <option value="xr">XRegExp named match</option>
+                <option value="s0">simple mail</option>
+                <option value="s1">simple url</option>
+                <option value="cl">clear</option>
+            </select>
+
+        <!-- -->
+        </legend>
+        <textarea id="i_regexp" class="full" cols="60" rows="1" wrap="virtual" accesskey="e">\s+</textarea>
+        <textarea id="i_replacements" class="hidden" cols="30" rows="1" wrap="virtual" accesskey="t">{$&}</textarea><br/>
+        <div id="block_opt">
+            <label accesskey="g"><input type="checkbox" id="i_global" checked="checked" /><abbr title="/g: whether the regexp should return after the 1st match, or search further"><u>G</u>lobal</abbr></label>
+            <label accesskey="s"><input type="checkbox" id="i_singleline" title="currently works only with Mozilla" /><abbr title="/s: whether . should match newlines as well"><u>S</u>ingle</abbr></label>
+
+            <label accesskey="m"><input type="checkbox" id="i_multiline" title="currently works only with Mozilla" /><abbr title="/m: whether ^ and $ should match multiple times"><u>M</u>ulti</abbr></label>
+            <label accesskey="i"><input type="checkbox" id="i_insensitive" checked="checked" /><abbr title="/i: case-in/sensitive matching"><u>I</u>gnore case</abbr></label>
+            <label accesskey="x"><input type="checkbox" id="i_extended" /><abbr title="/x: eXtended expressions (e.g. with comments)">e<u>X</u>tended</abbr></label>
+            <label accesskey="p"><input type="checkbox" id="i_split" /><abbr title="split the target text by the given regexp">S<u>p</u>lit</abbr></label>
+
+            <label accesskey="r"><input type="checkbox" id="i_replace" /><abbr title="replace the matched text with the given expression"><u>R</u>eplace</abbr></label>
+            <label accesskey="c"><input type="checkbox" id="i_compact" /><abbr title="toggle compact mode"><u>C</u>ompact</abbr></label>
+            <label accesskey="h"><input type="checkbox" id="i_miniref" /><abbr title="show the quick regexp reference"><u>H</u>elp</abbr></label>
+            <br/>
+        </div>
+    </fieldset>
+
+    <fieldset id="fs_results">
+        <legend id="l_results"><span id="o_num_results">0</span>&nbsp;<span id="o_results_desc"></span></legend>
+        <div id="o_result_block">
+            <ul id="o_result_matched" class="shown">
+            </ul>
+            <span id="o_result_replaced" class="hidden"></span>
+        </div>
+    </fieldset>
+
+    <fieldset id="fs_target">
+        <legend id="l_target"><u>T</u>arget&nbsp(<span id="o_target_len">0</span>&nbsp;chars)</legend>
+        <div id="o_target_block">
+            <textarea id="i_target" class="shown" rows="5" accesskey="t" wrap="off">The quick
+brown<br>\n
+
+fox jumps
+
+over
+the
+lazy
+dog.
+0123456789.:,;(*!?')
+/\"$%&+-_#
+</textarea>
+            <div id="o_target" class="hidden">
+
+            </div>
+        </div>
+        <div id="target_opt">
+            <label accesskey="v"><input type="checkbox" id="i_evaltarget" /><abbr title="replace special chars such as \r, \n before matching">E<u>v</u>al target text</abbr></label>
+            <label><input type="checkbox" id="i_escaperesults" disabled="disabled" /><abbr title="whether the matched results should be escaped after the matching">Escape matched texts</abbr></label>
+        </div>
+    </fieldset>
+
+</form>
+
+<div id="inlinehelp">
+<!--Mini Regular Expressions reference-->
+<pre>
+\d     any decimal digit
+\D     any char that is not a decimal digit
+\s     any whitespace char
+\S     any char that is not a whitespace
+\w     any <em>word</em> char, i.e. [A-Za-z0-9_]
+\W     any <em>non-word</em> char, i.e. [^A-Za-z0-9_]
+\b     word boundary; backspace inside []
+\B     not a word boundary
+\A     start of subject
+       (independent of multiline mode)
+\Z     end of subject or newline at end
+       (independent of multiline mode)
+\z     end of subject
+       (independent of multiline mode)
+\1..n  backreference inside the regexp
+
+[]     char class
+-      range separator in char class
+^      beginning of line; negate inside []
+$      end of line
+()     capturing parentheses
+(?:)   non-capturing parentheses
+|      separator btw. alternatives
+
+*      zero or more time, equals to {0,}
++      one or more time, equals to {1,}
+?      zero or one time, equals to {0,1};
+       non-greedy modifier after *+?{}
+{m,n}  preceding group: min m, max n times
+(?=x)  lookahead (only if followed by x)
+(?!x)  negated lookahead (only if not followed)
+(?&lt;=x) <strike>lookbehind</strike>, not supported by JS
+(?&lt;!x) <strike>negated lookbehind</strike>, not supported by JS
+
+\f     form-feed
+\t     tab
+\v     vertical-tab
+\r     carriage return
+\n     new line (unix:\n, win:\r\n, mac:\r)
+
+\xhh   hexadecimal code of char (2 hex)
+\uhhhh unicode code of char (4 hex)
+
+
+<a href="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:RegExp#Special_characters_in_regular_expressions" target="_blank">Complete reference</a>
+</pre>
+</div>
+
+<div id="pagefooter">
+<script>
+/* globals isGecko */
+if (!isGecko) document.write('<div id="me" style="display:none;">');
+</script>
+<a href="http://www.cuneytyilmaz.com/prog/jrx/" target="_blank"><img
+alt="Cüneyt Yilmaz (you need an RFC2397 compatible browser,
+like Mozilla to view this ;)"
+title="Cüneyt Yilmaz (you need an RFC2397 compatible browser, like Mozilla to view this ;)"
+align="left" width="39" height="50" border="0" hspace="5" src="data:image/gif;base64,
+R0lGODlhJwAyAPcAAB4uIyQqMR48KyE8My4zMis9MTUxQj82QCFCOSlFQDRFNDdEQTJTMzNS
+PTVQRDZbRktEMURMNkU+Rk9ERUdWMkhTQERcQUdoR15GMWJHQlRWOWBaOlxnQFl2QW51O412
+N0dOU1NOVmBPVl5YZENmUkhpXVpsUlxrYm5QVXFYWm5rVG1iaHpgXIpoXXtpb4hocGZ5X354
+cG6OV3SPb5V3bYx1e5CGbY+gZnt+iJF8gZp+gpqGhY2MiJGfg4mWn5ydmbx3Qb19dqehYcS1
+aqWGhraFhKmQiKqmh6iKlKeUlq+Wkb2Sjq2clKytkcCgksi6ka+Wn7Geo62npK+lr7ucpLWt
+nL2lnMujobauo723orOxsb21rcaxpNatqsXEp+HbpaWtva25vcGttb21ucayus61tcq9tcbK
+tam1xrO5yL+1yMq2xLvBzMbGxrzC07/Q5M7Buc7Bxc7GztvBvtbGzs/M1tbOztzQ1dPY2+rq
+wdLY6ebc4tne8Njs+Ofn8+r0/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAAAAJwAyAEAI/gAjUKhQgQIFBQogYMCgQYMN
+IUKAeNiAgQIGCBAaatiw8QMQIEOGCJnxg8eFAgscXIABxo0bNTDHjBEjZsyamzfl3Nnjp+ef
+P3rSfBkqcsgNEg9kkMSypUyZLWLISKVZc+YULVrGqJFTB8+dr3batMERQYUNIhZoBLlixYwZ
+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
+IEgFWKADFwgIAAA7"/></a>
+<script>
+/* globals isGecko */
+if (!isGecko) document.write('</div>\n');
+</script>
+
+<address>
+<p>Author: <span lang="tr">C&uuml;neyt Y&#305;lmaz</span><br/>
+
+<a href="http://www.cuneytyilmaz.com/prog/jrx/" title="go to JRX home page" target="_blank">cuneytyilmaz.com</a><br/>
+Suggestions, complaints or just wanna say hello?
+<script>
+/* globals EmailDecryptor */
+EmailDecryptor.dumpEmail();
+</script></p>
+</address>
+<p>Distributed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank" title="for details see GNU License">GNU License</a>.<br/>
+Modifications are allowed as long as credits are preserved and visible!<br/>
+<em>This is <strong>not</strong> an AJAX application, you can save the page locally and use it off-line.</em></p>
+
+</div>
+
+<div id="result_tooltip"></div>
+
+<a name id="helpme" accesskey="q"></a>
+
+<p class="noStyles">Your browser doesn't support CSS, please upgrade!</p>
+
+</body>
+</html>

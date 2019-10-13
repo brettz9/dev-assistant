@@ -9,3 +9,6 @@ common/loadsaveutils.js
 
 # Other
 node_modules
+
+# only ignore for now
+regex/index.js

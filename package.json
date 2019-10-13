@@ -1,11 +1,12 @@
 {
   "name": "dev-assistant",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Web Developer tools",
   "main": "install.js",
   "scripts": {
     "eslint": "eslint --ext=js,html.md .",
-    "open-xpath": "open-cli http://localhost:8001/xpath/",
+    "open-regex": "open-cli http://localhost:8001/regex/ && npm start",
+    "open-xpath": "open-cli http://localhost:8001/xpath/ && npm start",
     "start": "static -p 8001",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

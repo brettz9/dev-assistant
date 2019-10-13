@@ -1,0 +1,153 @@
+body {
+    font-family: Verdana, Helvetica, sans-serif; font-size: 0.9em;
+    color: #172F60; background-color: #fff;
+    margin: 5px; padding: 0 0 3em 0;
+    }
+h1 {
+    font-size: 1.5em; font-family : Garamond, Times, serif;
+    color: #25968A; background-color: transparent;
+    display: inline; margin-right: 5em;
+    }
+input, textarea {
+    color: inherit; background-color: inherit;
+    font-family: "Courier New", Courier, sans-serif;
+    }
+
+/* link colors */
+a:link, a:visited, a:hover, a:active { text-decoration: underline; }
+a:visited { color: #AE2A56; border-bottom: 1px solid #2F5FC1; }
+a:link    { color: #2F5FC1; border-bottom: 1px solid #2F5FC1; }
+a:hover   { color: #F3F5F8; border-bottom: 1px solid #172F60; background-color: #B7BCC7; }
+html>body a:link, html>body a:visited { border-bottom: 1px dotted #2F5FC1; text-decoration: none; }
+html>body a:hover, html>body a:active { border-bottom: 1px solid; }
+
+#help_about {
+    display: none;
+    font-family: Verdana, Helvetica, sans-serif;
+    width: 41em;
+    margin: 0.5em auto 0 0;
+    padding: 0.5em 1em 1em 1em;
+    border: 1px solid #DFE4EC;
+    }
+#help_about p, #help_about table, #help_about td, #help_about ul {font-size: 0.9em;}
+#help_about p.q       { color: #2F5FC1; font-weight: bold; }
+#help_about p.a       { font-style: italic; }
+#help_about p.w       { color: red; font-weight: bold; }
+
+
+
+
+
+#pageheader, #pagenews, #fs_regexp, #fs_results, #fs_target {
+    width: 41em;
+    }
+
+#pagenews { color: #cc0000; }
+
+#fs_regexp, #fs_results, #fs_target {
+    display: block;
+    border: 1px solid #DFE4EC;
+    margin: 0.5em auto 0 0;
+    padding: 0.5em 1em 1em 1em;
+    background-color: #F3F5F8;
+}
+
+/* for the field labels */
+#l_regexp, #l_results, #l_target {
+    font-weight: bold; font-size: 0.8em;
+    margin: 0 0 0.4em 0;
+    padding: 0.4em;
+    border: 1px solid #DFE4EC;
+    border-width: 1px 1px 0 1px;
+    /*color: #F3F5F8;*/
+    background-color: #F3F5F8;
+    }
+
+
+
+
+/* for the modifiers & options */
+#block_opt, #target_opt
+    { font: normal normal 0.7em/0.8 Verdana, Helvetica, sans-serif; }
+#i_compact, #i_global, #i_singleline, #i_multiline, #i_insensitive, #i_extended, #i_split, #i_replace, #i_miniref, #i_evaltarget, #i_escaperesults
+    { width: 12px; height: 12px; margin-bottom: 0px; }
+label abbr{ border-bottom: 1px dotted; }
+
+/* input[type="checkbox"] { width: 1.1em; height: 1.1em; } */
+
+
+/** Bright Focus (for buttons, links, and textboxes) */
+    a:hover:active { color: black; background: yellow; }
+    a:not(:hover):active { color: black; background: #eee; }
+    *:focus { -moz-outline: 2px solid -moz-rgba(255,0,0,0.5) !important; -moz-outline-offset: 1px !important; -moz-outline-radius: 3px !important; }
+    textarea:focus, select:focus, input:focus { -moz-outline-offset: -1px !important; }
+    a:focus { -moz-outline-offset: 0px !important; }
+
+
+/* for the main elements */
+#i_sample { font: normal normal 1em/0.8 Verdana, Helvetica, sans-serif; }
+
+
+#i_regexp, #i_replacements, #o_result_matched, #o_result_replaced, #i_target, #o_target  {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 0.75em;
+    /* UAs don't allow this to be overridden!?! border: 1px solid #A6BCE8 !important; */
+    border: 1px solid #DFE4EC;
+    color: inherit; background-color: #fff;
+    overflow: auto;
+    width: 100%;
+    }
+#i_regexp:focus, #i_replacements:focus, #i_target:focus {
+    background-color: #FFF1D4;
+    }
+
+#i_regexp.full { width: 100%; float: none; height: 1.5em; }
+#i_regexp.half { width: 50%;  float: left; height: 1.5em; }
+
+#i_replacements.hidden { display: none; height: 1.5em; }
+#i_replacements.shared { display: block; height: 1.5em; width: 50%; float: right; }
+
+#o_result_matched { list-style: none; color: inherit; background-color: #fff; font-size: 0.75em; border: 1px solid #DFE4EC; width: 100%; height: 14.66em; overflow: auto; margin: 0; padding: 0; }
+#o_result_matched.shown { display: block; }
+#o_result_matched.hidden { display: none; }
+#o_result_matched li { font-family: "Courier New", Courier, sans-serif; white-space: pre; background-color: inherit; border-bottom: 1px solid #fff; padding: 0; }
+#o_result_matched li:hover { background-color: #ccc; border-bottom: 1px dotted blue; cursor: pointer; }
+
+#o_result_replaced.shown  { display: block; padding: 0; width: auto; height: 14.66em; /* (select-size=11) / 0.75 = 14.66em */ white-space: pre; }
+#o_result_replaced.hidden { display: none; }
+
+
+#o_target em, #o_result_replaced em { color: #FFF1D4; background-color: #172F60; border-bottom: 1px dotted #172F60; font-style: normal; font-weight: bold; padding: 0 0.1em 0 0.1em; margin: 0; }
+
+
+#o_target_block { height: 9em; width: 41em; }
+#i_target.shown { display: block; height: 100%; width: 100%; padding: 0; margin: 0; border: 1px solid #DFE4EC; }
+#i_target.hidden { display: none; }
+#o_target.shown { display: block; height: 100%; width: 100%; padding: 0; margin: 0; border: 1px solid #DFE4EC; white-space: pre; }
+#o_target.hidden { display: none; }
+
+
+
+#o_num_results, #o_target_len
+    { width: 5em; /* display: block; float: left; border: 1px solid #AE2A56; color: #AE2A56; background-color: #fff; */ font-weight: bold; text-align: right;  }
+
+#result_tooltip {
+    position: absolute; visibility:hidden; white-space: normal; overflow: hidden;
+    width: 50em; padding: 1em;
+    font-size: 0.7em;
+    color: #172F60; background-color: #FFF1D4; border: 3px double #DFE4EC;
+    }
+
+
+/* general purpose */
+.notes { text-align: justify;}
+.noStyles { display: none; }
+#inlinehelp { position: absolute; left: 45em; top: 1em; width: auto; border: 1px solid #DFE4EC; visibility: hidden; }
+#inlinehelp pre { font-size: 0.9em; }
+#help {
+    text-decoration: none;
+    font-weight: bold;
+    cursor: help !important;
+    margin: 0 auto auto 7em;
+    float: right;
+    }
