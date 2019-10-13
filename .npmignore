@@ -1,0 +1,16 @@
+# Still migrating
+chrome
+content
+locale
+modules
+skin
+install.js
+common/loadsaveutils.js
+.nojekyll
+.remarkrc
+*.bat
+*.sh
+*.rdf
+*.py
+chrome.manifest
+install.js
