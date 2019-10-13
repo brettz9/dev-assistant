@@ -13,4 +13,3 @@ common/loadsaveutils.js
 *.rdf
 *.py
 chrome.manifest
-install.js
