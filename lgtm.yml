@@ -1,0 +1,7 @@
+extraction:
+  javascript:
+    index:
+      filters:
+        - exclude: "chrome"
+        - exclude: "content"
+        - exclude: "build.py"

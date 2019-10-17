@@ -10,5 +10,8 @@ common/loadsaveutils.js
 # Other
 node_modules
 
+# ignore till removing
+regex/xregexp.js
+
 # only ignore for now
 regex/index.js
