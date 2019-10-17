@@ -1,5 +1,10 @@
 # CHANGES for dev-assistant
 
+## ?
+
+- Linting (LGTM): Apply LGTM fixes and exclude currently unused files
+- Extract xregexp file to own file
+
 ## 1.1.0
 
 - Ensure [XPath Tester](https://brettz9.github.io/dev-assistant/xpath/) and
