@@ -4,4 +4,7 @@ extraction:
       filters:
         - exclude: "chrome"
         - exclude: "content"
+  python:
+    index:
+      filters:
         - exclude: "build.py"
