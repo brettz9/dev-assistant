@@ -743,17 +743,17 @@ var CookieManager =
         var hc;         // returned hex-code
         for(var l in t_regexp)
         {
-            hc = this.d2h(String.charCodeAt(t_regexp[l]));
+            hc = this.d2h(t_regexp[l].charCodeAt());
             t_regexp_enc = t_regexp_enc + (hc.length == 1 ? '0' : '') + hc;
         }
         for(l in t_target)
         {
-            hc = this.d2h(String.charCodeAt(t_target[l]));
+            hc = this.d2h(t_target[l].charCodeAt());
             t_target_enc = t_target_enc + (hc.length == 1 ? '0' : '') + hc;
         }
         for(l in t_replac)
         {
-            hc = this.d2h(String.charCodeAt(t_replac[l]));
+            hc = this.d2h(t_replac[l].charCodeAt());
             t_replac_enc = t_replac_enc + (hc.length == 1 ? '0' : '') + hc;
         }
         cookieval = cookieval + 'i_regexp'      + "-" + t_regexp_enc        + '+';
