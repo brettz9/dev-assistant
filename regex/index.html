@@ -46,14 +46,12 @@ TODO:
 
 <div id="pageheader">
 <h1><abbr title="Javascript Regular eXpressions">JRX</abbr>: real-time JavaScript <abbr title="Regular Expression">RegExp</abbr> evaluator
+<span id="lastUpdate">v1.1b16</span>
 <script>
-document.write(
-    '<span title="' + 'Last update: ' +
-    (new Date(document.lastModified)).toLocaleString() +
-    '" style="border-bottom: 1px dotted; display: inline;">'
-);
-</script>v1.1b16<script>
-document.write('</span>');
+const lastUpdate = document.querySelector('#lastUpdate');
+lastUpdate.title = 'Last update: ' +
+    (new Date(document.lastModified)).toLocaleString();
+lastUpdate.style.borderBottom = '1px dotted';
 </script>
 </h1>
 
@@ -386,10 +384,6 @@ $      end of line
 </div>
 
 <div id="pagefooter">
-<script>
-/* globals isGecko */
-if (!isGecko) document.write('<div id="me" style="display:none;">');
-</script>
 <a href="http://www.cuneytyilmaz.com/prog/jrx/" target="_blank"><img
 alt="Cüneyt Yilmaz (you need an RFC2397 compatible browser,
 like Mozilla to view this ;)"
@@ -445,11 +439,6 @@ GHW5wQ0MwGkEGwipM7MbwdVCcJwVxKB7+muA8fhnAe50KlChMgMWchCCEDy3gbF6oAEOAIIR
 OHO3moLl8TiVG+0kwAdvYUIM4he/JTuQAA5UVQhy0BY66ME6kOkfTgy6k53sJKAEfXiDFqyQ
 uR0YaQKpQjKNrbdZM9ThDz4gwX72c4HtGLoEPngDeN6ABihkrjwbpYELWOACSiUhCmzgAxD/
 IEgFWKADFwgIAAA7"/></a>
-<script>
-/* globals isGecko */
-if (!isGecko) document.write('</div>\n');
-</script>
-
 <address>
 <p>Author: <span lang="tr">C&uuml;neyt Y&#305;lmaz</span><br/>
 

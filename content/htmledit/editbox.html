@@ -15,9 +15,8 @@ function update()
     {
       old = textarea.value;
 
-      d.open();
-      d.write(old);
-      d.close();
+      // Todo: This was using document.open and document.write
+      d.documentElement.innerHTML = old;
     }
   }
 

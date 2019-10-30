@@ -6,6 +6,7 @@ module.exports = {
   "settings": {
     "polyfills": [
         "document.createTreeWalker",
+        "document.querySelector",
         "DOMParser",
         "fetch"
     ],

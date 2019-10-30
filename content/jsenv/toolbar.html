@@ -130,7 +130,7 @@ function execute()
 // Advantages: can get line numbers in IE.
 function executeWithDW(js, win)
 {
-  win.document.open();
+  // Todo: This was using document.open and document.write
   win.inputFrame = inputFrame;
   win.outputFrame = outputFrame;
   win.document.documentElement.innerHTML =
@@ -145,7 +145,6 @@ function executeWithDW(js, win)
     + '<body><script>'
     + js         // should escape it a little to remove the string <\/script> at least...
     + "<\/script><\/body><\/html>";
-  win.document.close();
 }
 
 // Advantages: can be used to inject a script into another window, faster in Mozilla.
