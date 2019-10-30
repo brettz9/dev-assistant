@@ -688,7 +688,11 @@ var EmailDecryptor =
     {
         var emailAddress = this.goForth('19960 31214 2956 9983 8670 16115 12124 31214 18007 11197 13184 19211 15558 30912 3065 29611 3065 8845 18057 21918 32133 13714 11821 13184 2956 21918', '34933', '29623');
         //emailAddress is the decrypted version of your email address, ie none@none.com
-        document.write('<a href="mailto:' + emailAddress + '" title="send an email about JRX">drop me an email.</a>');
+        var a = document.createElement('a');
+        a.href = 'mailto:' + emailAddress;
+        a.title = 'send an email about JRX';
+        a.textContent = 'drop me an email.';
+        document.querySelector('#email').append(a);
     }
 } // end EmailDecryptor
 
