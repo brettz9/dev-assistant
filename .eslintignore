@@ -10,7 +10,7 @@ common/loadsaveutils.js
 # Other
 node_modules
 
-# ignore till removing
+# ignore till adding as dep.
 regex/xregexp.js
 
 # only ignore for now
