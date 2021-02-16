@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "description": "Web Developer tools",
   "scripts": {
+    "prepublishOnly": "pnpm i",
     "eslint": "eslint --ext=js,html.md .",
     "open-regex": "open-cli http://localhost:8001/regex/ && npm start",
     "open-xpath": "open-cli http://localhost:8001/xpath/ && npm start",
