@@ -1,8 +1,0 @@
-{
-  "plugins": {
-    "lint": {
-        "no-multiple-toplevel-headings": false,
-        "ordered-list-marker-value": "one"
-    }
-  }
-}
