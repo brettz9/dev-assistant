@@ -3,7 +3,12 @@
 ## ?
 
 - Linting (LGTM): Apply LGTM fixes and exclude currently unused files
-- Extract xregexp file to own file
+- Linting (ESLint): As per latest ash-nazg
+- Refactoring: Extract xregexp file to own file
+- Refactoring: 2 sp. indent
+- npm: Use `http-server` (no reported vulnerabilities)
+- npm: Update devDeps (including ash-nazg's changed peerDeps)
+- npm: Switch to pnpm
 
 ## 1.1.0
 

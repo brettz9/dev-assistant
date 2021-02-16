@@ -1,22 +1,22 @@
+'use strict';
+
 module.exports = {
-  "extends": ["ash-nazg"],
-  "parserOptions": {
-      "sourceType": "module"
-  },
-  "settings": {
-    "polyfills": [
-        "document.createTreeWalker",
-        "document.querySelector",
-        "DOMParser",
-        "fetch"
+  extends: ['ash-nazg/+script', 'ash-nazg/sauron-overrides'],
+  settings: {
+    polyfills: [
+      'document.createTreeWalker',
+      'document.querySelector',
+      'DOMParser',
+      'fetch',
+      'navigator',
+      'NodeFilter',
+      'XPathResult'
     ],
-    "coverage": true
+    coverage: true
   },
-  "env": {
-      "node": false,
-      "browser": true
+  env: {
+    browser: true
   },
-  "rules": {
-    "indent": ["error", 4, {"outerIIFEBody": 0}]
+  rules: {
   }
 };
