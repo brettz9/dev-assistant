@@ -11,6 +11,6 @@ export const initLocales = async function () {
 };
 
 // Todo: Properly format with args
-export const _ = function (key, ...args) {
+export const _ = function (key /* , ...args */) {
   return msgsJSON[key].message;
 };
