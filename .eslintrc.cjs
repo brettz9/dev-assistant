@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  extends: ['ash-nazg/+script', 'ash-nazg/sauron-overrides'],
+  extends: ['ash-nazg/sauron-overrides'],
   settings: {
     polyfills: [
       'document.createTreeWalker',
