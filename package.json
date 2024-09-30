@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "prepublishOnly": "pnpm i",
-    "eslint": "eslint --ext=js,html.md .",
+    "eslint": "eslint .",
     "lint": "npm run eslint",
     "open-regex": "open-cli http://localhost:8001/regex/ && npm start",
     "open-xpath": "open-cli http://localhost:8001/xpath/ && npm start",
@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserslist": [
-    "cover 100%"
+    "defaults, not op_mini all"
   ],
   "repository": {
     "type": "git",
@@ -34,26 +34,10 @@
     "Nickolay Ponomarev"
   ],
   "devDependencies": {
-    "@brettz9/eslint-plugin": "^1.0.4",
-    "eslint": "^8.53.0",
-    "eslint-config-ash-nazg": "^35.1.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-array-func": "^4.0.0",
-    "eslint-plugin-compat": "^4.2.0",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-html": "^7.1.0",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-jsdoc": "^46.9.0",
-    "eslint-plugin-markdown": "^3.0.1",
-    "eslint-plugin-no-unsanitized": "^4.0.2",
-    "eslint-plugin-no-use-extend-native": "^0.5.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-sonarjs": "^0.23.0",
-    "eslint-plugin-standard": "^4.1.0",
-    "eslint-plugin-unicorn": "^49.0.0",
+    "eslint": "^9.11.1",
+    "eslint-config-ash-nazg": "^36.17.1",
     "http-server": "^14.1.1",
-    "open-cli": "^7.2.0"
+    "open-cli": "^8.0.0"
   },
   "engines": {},
   "license": "MIT",

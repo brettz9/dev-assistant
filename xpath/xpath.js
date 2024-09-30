@@ -26,7 +26,7 @@ function decorate () {
 
   try {
     x = dp.parseFromString(inTxt, 'text/xml');
-  } catch (e) {
+  } catch {
     // Show error message
     $('#in').className = 'error';
     return;
@@ -45,7 +45,7 @@ function decorate () {
     nodes = x.evaluate(
       expr, x, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null
     );
-  } catch (e) {
+  } catch {
     // Show error message
     $('#expr').className = 'error';
     return;
