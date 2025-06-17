@@ -124,16 +124,16 @@ function addTree (walker, destNode) {
 
 /*
 function load () {
-  loadFileToTextbox(window, $('#in'), 'xml');
+  loadFileToTextbox(globalThis, $('#in'), 'xml');
   decorate();
 }
 
 function save () {
-  saveFileFromTextbox(window, $('#in'), 'xml');
+  saveFileFromTextbox(globalThis, $('#in'), 'xml');
 }
 */
 
-window.addEventListener('DOMContentLoaded', async () => {
+globalThis.addEventListener('DOMContentLoaded', async () => {
   await initLocales();
   document.title = _('xpath_title');
   // $('#load').addEventListener('click', load);

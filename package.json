@@ -34,8 +34,8 @@
     "Nickolay Ponomarev"
   ],
   "devDependencies": {
-    "eslint": "^9.11.1",
-    "eslint-config-ash-nazg": "^36.17.1",
+    "eslint": "^9.29.0",
+    "eslint-config-ash-nazg": "^38.0.1",
     "http-server": "^14.1.1",
     "open-cli": "^8.0.0"
   },
